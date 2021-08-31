@@ -7,6 +7,34 @@
         <entry key="../../../../layout/compose-model-1630339179368.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1630339193076.xml" value="1.0" />
         <entry key="../../../../layout/compose-model-1630340103466.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1630394759923.xml" value="1.25" />
+        <entry key="../../../../layout/compose-model-1630395792523.xml" value="0.67" />
+        <entry key="../../../../layout/compose-model-1630398072920.xml" value="0.2592905405405405" />
+        <entry key="../../../../layout/compose-model-1630398676720.xml" value="0.26182432432432434" />
+        <entry key="../../../../layout/compose-model-1630400513812.xml" value="0.2491554054054054" />
+        <entry key="../../../../layout/compose-model-1630400704484.xml" value="0.42962962962962964" />
+        <entry key="../../../../layout/compose-model-1630401058036.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1630401360751.xml" value="0.42962962962962964" />
+        <entry key="../../../../layout/compose-model-1630401728102.xml" value="0.22" />
+        <entry key="app/src/main/res/drawable/drawer_base_theme_gradient.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/drawable/focus.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_account_circle_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_add_shopping_cart_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_baseline_subscriptions_24.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_child_care_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_close_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_done_black_241dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_done_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_filter_center_focus_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_launcher2_background.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_live_help_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_movie_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_settings_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/ic_star_black_24dp.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/send.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/subsc.xml" value="0.29635416666666664" />
       </map>
     </option>
   </component>
