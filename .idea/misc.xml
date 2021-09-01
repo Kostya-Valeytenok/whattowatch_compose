@@ -16,6 +16,14 @@
         <entry key="../../../../layout/compose-model-1630401058036.xml" value="0.33" />
         <entry key="../../../../layout/compose-model-1630401360751.xml" value="0.42962962962962964" />
         <entry key="../../../../layout/compose-model-1630401728102.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1630484323318.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1630484650127.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1630492657282.xml" value="0.4212962962962963" />
+        <entry key="../../../../layout/compose-model-1630493623984.xml" value="0.1609531772575251" />
+        <entry key="../../../../layout/compose-model-1630493623986.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1630501879045.xml" value="0.42777777777777776" />
+        <entry key="../../../../layout/compose-model-1630504265824.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1630504265833.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/drawer_base_theme_gradient.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/drawable/focus.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/ic_account_circle_black_24dp.xml" value="0.29635416666666664" />
@@ -35,6 +43,7 @@
         <entry key="app/src/main/res/drawable/ic_star_black_24dp.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/send.xml" value="0.29635416666666664" />
         <entry key="app/src/main/res/drawable/subsc.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/layout/fragment_movies.xml" value="0.3401268115942029" />
       </map>
     </option>
   </component>

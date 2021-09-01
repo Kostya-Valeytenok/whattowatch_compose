@@ -18,10 +18,11 @@ import com.raproject.whattowatch.models.ContentItem
 fun ContentCard(content: ContentItem) {
     Card(
         elevation = 4.dp,
-        modifier = Modifier.padding(16.dp).fillMaxWidth()
+        modifier = Modifier.padding(start = 16.dp,end = 16.dp, top = 8.dp,bottom = 8.dp)
+            .fillMaxWidth(),
     ) {
 //
-        Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             Column(
                 modifier = Modifier
                     .width(100.dp)
@@ -33,16 +34,16 @@ fun ContentCard(content: ContentItem) {
                 Image(
                     contentDescription = "Poster",
                     bitmap = content.image.asImageBitmap(),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight()
                 )
             }
             Column(modifier = Modifier.fillMaxWidth().padding(start = 8.dp)) {
                 Text(
-                    text = content.name, modifier = Modifier.fillMaxWidth(),
+                    text = content.name, modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = content.year, Modifier.padding(top = 16.dp).fillMaxWidth())
-                Text(text = content.name, Modifier.padding(top = 2.dp).fillMaxWidth())
+                Text(text = content.genres, Modifier.padding(top = 2.dp).fillMaxWidth())
             }
         }
     }

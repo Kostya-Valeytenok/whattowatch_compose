@@ -1,12 +1,11 @@
 package com.raproject.whattowatch.ui
 
-import android.content.res.Resources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -18,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import java.lang.Math.*
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -27,7 +27,6 @@ fun Drawer() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(end = 56.dp)
             .background(MaterialTheme.colors.onPrimary)
     ) {
         Box(
@@ -45,11 +44,19 @@ fun Drawer() {
         )
         DrawerScreen.screens.forEach { screen ->
             Spacer(Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = painterResource(id = screen.iconId),
                     contentDescription = "Icon",
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 8.dp
+                    ),
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
                 Text(
@@ -91,4 +98,36 @@ fun Modifier.gradientBackground(colors: List<Color>, angle: Float) = this.then(
 @Composable
 fun DrawerPreview() {
     Drawer()
+}
+
+@Composable
+fun DrawerAPHA() {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            Drawer()
+        },
+        content = {
+            Column {
+                Text("Text in Bodycontext")
+                Button(onClick = {
+
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }) {
+                Text("Click to open")
+            }
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+fun DrawerAPHAPreview() {
+    DrawerAPHA()
 }
