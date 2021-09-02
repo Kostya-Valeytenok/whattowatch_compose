@@ -2,8 +2,19 @@ package com.raproject.whattowatch.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalDrawer
+import androidx.compose.material.Text
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -18,9 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import java.lang.Math.*
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
+import androidx.compose.foundation.layout.Spacer as Spacer1
 
 @Composable
 fun Drawer() {
@@ -43,7 +58,7 @@ fun Drawer() {
                 )
         )
         DrawerScreen.screens.forEach { screen ->
-            Spacer(Modifier.height(16.dp))
+            Spacer1(Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -113,14 +128,15 @@ fun DrawerAPHA() {
         content = {
             Column {
                 Text("Text in Bodycontext")
-                Button(onClick = {
-
-                    scope.launch {
-                        drawerState.open()
+                Button(
+                    onClick = {
+                        scope.launch {
+                            drawerState.open()
+                        }
                     }
-                }) {
-                Text("Click to open")
-            }
+                ) {
+                    Text("Click to open")
+                }
             }
         },
     )

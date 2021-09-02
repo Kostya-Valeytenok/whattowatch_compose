@@ -4,15 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.raproject.whattowatch.models.ContentItem
-import com.raproject.whattowatch.ui.ContentCard
+import com.raproject.whattowatch.ui.MoviesScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
-import kotlinx.coroutines.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MoviesFragment : Fragment() {
@@ -25,24 +20,15 @@ class MoviesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        vm.getMovies()
         return ComposeView(requireContext()).apply {
-            CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
-                val movies = vm.getMovies()
-                setContent {
-                    WhattowatchTheme {
-                        MoviesList(movies)
-                    }
+            setContent {
+                val movies = vm.movies.value
+                val loadingVisibility = vm.moviesLoadingStatus.value
+                WhattowatchTheme {
+                    MoviesScreen(movies, loadingVisibility)
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MoviesList(movies: List<ContentItem>) {
-    LazyColumn {
-        items(movies) {
-            ContentCard(content = it)
         }
     }
 }

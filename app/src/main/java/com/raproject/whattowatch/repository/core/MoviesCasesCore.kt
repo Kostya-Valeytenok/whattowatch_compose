@@ -4,7 +4,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import com.raproject.whattowatch.models.ContentItem
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -15,7 +20,7 @@ class MoviesCasesCore : KoinComponent {
 
     private suspend fun getMoviesCore(database: SQLiteDatabase): List<ContentItem> {
         val cursor = database.rawQuery(
-            "select _Key, Image, Title, Year, Rating1 from MainTableEN where _Key in (select * from Films) ORDER BY Rating1 DESC",
+            "select _Key, Image, Title, Year, Rating1 from MainTableEN where _Key in (select * from Films) ORDER BY Rating1 DESC", // ktlint-disable max-line-length
             null
         )
         cursor.moveToFirst()
@@ -49,7 +54,8 @@ class MoviesCasesCore : KoinComponent {
         return item
     }
 
-    private fun getGenresAsync(scope: CoroutineScope, key: String, database: SQLiteDatabase): Deferred<String> =
+    private fun getGenresAsync(scope: CoroutineScope, key: String, database: SQLiteDatabase):
+        Deferred<String> =
         scope.async {
             var genesTemp = ""
             val genres = database.rawQuery("SELECT * FROM GenresKeysEN WHERE _Key = $key", null)
@@ -61,7 +67,8 @@ class MoviesCasesCore : KoinComponent {
             return@async genesTemp
         }
 
-    private fun getEntriesCursorAsync(scope: CoroutineScope, key: String, database: SQLiteDatabase): Deferred<Cursor> =
+    private fun getEntriesCursorAsync(scope: CoroutineScope, key: String, database: SQLiteDatabase):
+        Deferred<Cursor> =
         scope.async {
             val entriesCursor = database.rawQuery("SELECT * FROM Postors WHERE _Key = " + key, null)
             entriesCursor.moveToNext()

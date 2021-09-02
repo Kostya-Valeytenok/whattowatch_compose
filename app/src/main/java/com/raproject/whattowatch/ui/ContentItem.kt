@@ -2,7 +2,14 @@ package com.raproject.whattowatch.ui
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +25,7 @@ import com.raproject.whattowatch.models.ContentItem
 fun ContentCard(content: ContentItem) {
     Card(
         elevation = 4.dp,
-        modifier = Modifier.padding(start = 16.dp,end = 16.dp, top = 8.dp,bottom = 8.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth(),
     ) {
 //
