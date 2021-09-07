@@ -3,7 +3,6 @@ package com.raproject.whattowatch.repository.movies
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.repository.core.AnimeCasesCore
-import com.raproject.whattowatch.repository.core.MoviesCasesCore
 import com.raproject.whattowatch.utils.Localization
 import org.koin.core.KoinComponent
 import org.koin.core.inject
