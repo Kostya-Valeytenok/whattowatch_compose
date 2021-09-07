@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.repository.movies.MoviesCases
 import com.raproject.whattowatch.utils.BaseViewModel
+import com.raproject.whattowatch.utils.Localization
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,7 +21,7 @@ class MoviesFragmentViewModel : BaseViewModel(), KoinComponent {
     fun getMovies() {
         viewModelScope.launch {
             moviesLoadingStatus.value = true
-            movies.value = moviesCases.getFilms()
+            movies.value = moviesCases.getFilms(Localization.English)
             moviesLoadingStatus.value = false
         }
     }
