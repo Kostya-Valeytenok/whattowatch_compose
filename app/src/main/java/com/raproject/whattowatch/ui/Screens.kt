@@ -63,7 +63,35 @@ fun MoviesView(
             }
         }
         LoadingView(isDisplayed = loadingVisibility)
-        MoviesList(movies = movies)
+        ItemsList(ui_items = movies)
+    }
+}
+
+@Composable
+fun SeriesScreen(series: List<ContentItem>, loadingVisibility: Boolean) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    ScreenBase(drawerState) {
+        SeriesView(series = series, loadingVisibility, drawerState)
+    }
+}
+
+@Composable
+fun SeriesView(
+    series: List<ContentItem>,
+    loadingVisibility: Boolean,
+    drawerState: DrawerState
+) {
+    val scope = rememberCoroutineScope()
+    Column {
+        TopBar("Movies", ImageVector.vectorResource(id = R.drawable.ic_menu)) {
+            scope.launch {
+                if (drawerState.isOpen)
+                    drawerState.close()
+                else drawerState.open()
+            }
+        }
+        LoadingView(isDisplayed = loadingVisibility)
+        ItemsList(ui_items = series)
     }
 }
 
@@ -96,9 +124,9 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
 }
 
 @Composable
-fun MoviesList(movies: List<ContentItem>) {
+fun ItemsList(ui_items: List<ContentItem>) {
     LazyColumn {
-        items(movies) {
+        items(ui_items) {
             ContentCard(content = it)
         }
     }
