@@ -6,11 +6,11 @@ import com.raproject.whattowatch.utils.ContentType
 import com.raproject.whattowatch.utils.Localization
 import org.koin.core.KoinComponent
 
-class MoviesCasesCore : KoinComponent, BaseCaseCore() {
+class AnimeCasesCore : KoinComponent, BaseCaseCore() {
 
-    override val contentType: ContentType get() = ContentType.Movies
-    val getMoviesENCore = this::getContentCoreRequestEN
-    val getMoviesRUCore = this::getContentCoreRequestRU
+    override val contentType: ContentType get() = ContentType.Anime
+    val getAnimeENCore = this::getContentCoreRequestEN
+    val getAnimeRUCore = this::getContentCoreRequestRU
 
     private suspend fun getContentCoreRequestEN(database: SQLiteDatabase): List<ContentItem> {
         return getContentCoreRequest(database = database, localization = Localization.English)
