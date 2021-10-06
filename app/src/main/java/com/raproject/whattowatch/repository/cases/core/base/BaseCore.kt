@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.repository.cases.core
+package com.raproject.whattowatch.repository.cases.core.base
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
