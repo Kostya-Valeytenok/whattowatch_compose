@@ -23,11 +23,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.R
 import com.raproject.whattowatch.models.ContentItem
+import com.raproject.whattowatch.utils.ContentType
 import kotlinx.coroutines.launch
 
 @Composable
 private fun ScreenBase(drawerState: DrawerState, screen: @Composable () -> Unit) {
-    val scope = rememberCoroutineScope()
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -40,50 +40,21 @@ private fun ScreenBase(drawerState: DrawerState, screen: @Composable () -> Unit)
 }
 
 @Composable
-fun MoviesScreen(movies: List<ContentItem>, loadingVisibility: Boolean) {
+fun ContentScreen(titlesList: List<ContentItem>, loadingVisibility: Boolean, type: ContentType){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     ScreenBase(drawerState) {
-        MoviesView(movies = movies, loadingVisibility, drawerState)
+        ContentView(series = titlesList, loadingVisibility, drawerState,type)
     }
 }
 
 @Composable
-fun MoviesView(
-    movies: List<ContentItem>,
-    loadingVisibility: Boolean,
-    drawerState: DrawerState
-) {
+fun ContentView(series: List<ContentItem>,
+                loadingVisibility: Boolean,
+                drawerState: DrawerState,
+                type:ContentType){
     val scope = rememberCoroutineScope()
     Column {
-        TopBar("Movies", ImageVector.vectorResource(id = R.drawable.ic_menu)) {
-            scope.launch {
-                if (drawerState.isOpen)
-                    drawerState.close()
-                else drawerState.open()
-            }
-        }
-        LoadingView(isDisplayed = loadingVisibility)
-        ItemsList(ui_items = movies)
-    }
-}
-
-@Composable
-fun SeriesScreen(series: List<ContentItem>, loadingVisibility: Boolean) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    ScreenBase(drawerState) {
-        SeriesView(series = series, loadingVisibility, drawerState)
-    }
-}
-
-@Composable
-fun SeriesView(
-    series: List<ContentItem>,
-    loadingVisibility: Boolean,
-    drawerState: DrawerState
-) {
-    val scope = rememberCoroutineScope()
-    Column {
-        TopBar("Movies", ImageVector.vectorResource(id = R.drawable.ic_menu)) {
+        TopBar(type.screenName, ImageVector.vectorResource(id = R.drawable.ic_menu)) {
             scope.launch {
                 if (drawerState.isOpen)
                     drawerState.close()

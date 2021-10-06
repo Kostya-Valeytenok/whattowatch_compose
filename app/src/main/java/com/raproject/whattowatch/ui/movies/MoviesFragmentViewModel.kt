@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentItem
-import com.raproject.whattowatch.repository.movies.MoviesCases
+import com.raproject.whattowatch.repository.cases.MoviesCases
 import com.raproject.whattowatch.utils.BaseViewModel
 import com.raproject.whattowatch.utils.Localization
 import kotlinx.coroutines.launch

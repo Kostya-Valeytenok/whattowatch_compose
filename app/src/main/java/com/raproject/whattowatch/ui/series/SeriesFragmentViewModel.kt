@@ -4,8 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentItem
-import com.raproject.whattowatch.repository.series.SeriesCases
+import com.raproject.whattowatch.repository.cases.SeriesCases
 import com.raproject.whattowatch.utils.BaseViewModel
+import com.raproject.whattowatch.utils.Localization
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,7 +21,7 @@ class SeriesFragmentViewModel : BaseViewModel(), KoinComponent {
     fun getSeries() {
         viewModelScope.launch {
             seriesLoadingStatus.value = true
-            series.value = seriesCases.getSeries()
+            series.value = seriesCases.getSeries(Localization.English)
             seriesLoadingStatus.value = false
         }
     }

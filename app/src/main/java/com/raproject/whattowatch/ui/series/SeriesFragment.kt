@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.raproject.whattowatch.ui.SeriesScreen
+import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
+import com.raproject.whattowatch.utils.ContentType
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SeriesFragment : Fragment() {
@@ -26,7 +27,7 @@ class SeriesFragment : Fragment() {
                 val movies = vm.series.value
                 val loadingVisibility = vm.seriesLoadingStatus.value
                 WhattowatchTheme {
-                    SeriesScreen(movies, loadingVisibility)
+                    ContentScreen(movies, loadingVisibility, ContentType.TVShows)
                 }
             }
         }
