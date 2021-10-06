@@ -12,7 +12,7 @@ class DiApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
-            modules(listOf(dataBaseCasesModule, moviesModule))
+            modules(listOf(dataBaseCasesModule, vmModule))
         }
     }
 }
