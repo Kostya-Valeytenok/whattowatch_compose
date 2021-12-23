@@ -2,19 +2,9 @@ package com.raproject.whattowatch.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.DrawerValue
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalDrawer
-import androidx.compose.material.Text
-import androidx.compose.material.rememberDrawerState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer as Spacer1
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -28,14 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
+import com.raproject.whattowatch.utils.forEachIndexedWithLastMarker
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
-import androidx.compose.foundation.layout.Spacer as Spacer1
+import kotlinx.coroutines.launch
 
 @Composable
 fun Drawer() {
@@ -57,30 +47,52 @@ fun Drawer() {
                     angle = 135f
                 )
         )
-        DrawerScreen.screens.forEach { screen ->
-            Spacer1(Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = screen.iconId),
-                    contentDescription = "Icon",
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 8.dp
-                    ),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
-                )
-                Text(
-                    text = screen.title,
-                    style = MaterialTheme.typography.h4,
-                    fontSize = 14.sp
-                )
-            }
+        Spacer1(Modifier.height(8.dp))
+        DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
+
+            MenuItem(screen = screen)
+            if (!isLast)
+                Divider(Modifier.height(1.dp).padding(start = 8.dp))
         }
+    }
+}
+
+@Composable
+fun MenuItem(screen: DrawerScreen) {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.onPrimary)
+    ) {
+        Spacer1(Modifier.height(8.dp))
+        MenuItemContent(screen = screen)
+        Spacer1(Modifier.height(8.dp))
+    }
+}
+
+@Composable
+fun MenuItemContent(screen: DrawerScreen) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = screen.iconId),
+            contentDescription = "Icon",
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 8.dp,
+                bottom = 8.dp
+            ),
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+        )
+        Text(
+            text = screen.title,
+            style = MaterialTheme.typography.h4,
+            fontSize = 14.sp
+        )
     }
 }
 

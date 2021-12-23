@@ -1,5 +1,6 @@
 package com.raproject.whattowatch.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,14 +17,18 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.R
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.utils.ContentType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,18 +45,20 @@ private fun ScreenBase(drawerState: DrawerState, screen: @Composable () -> Unit)
 }
 
 @Composable
-fun ContentScreen(titlesList: List<ContentItem>, loadingVisibility: Boolean, type: ContentType){
+fun ContentScreen(titlesList: List<ContentItem>, loadingVisibility: Boolean, type: ContentType) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     ScreenBase(drawerState) {
-        ContentView(series = titlesList, loadingVisibility, drawerState,type)
+        ContentView(series = titlesList, loadingVisibility, drawerState, type)
     }
 }
 
 @Composable
-fun ContentView(series: List<ContentItem>,
-                loadingVisibility: Boolean,
-                drawerState: DrawerState,
-                type:ContentType){
+fun ContentView(
+    series: List<ContentItem>,
+    loadingVisibility: Boolean,
+    drawerState: DrawerState,
+    type: ContentType
+) {
     val scope = rememberCoroutineScope()
     Column {
         TopBar(type.screenName, ImageVector.vectorResource(id = R.drawable.ic_menu)) {
@@ -79,6 +86,10 @@ fun LoadingView(isDisplayed: Boolean) {
 
 @Composable
 fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    val selected = remember { mutableStateOf(0f) }
+    val rotation = animateFloatAsState(selected.value)
+    var isAnimRun = false
     TopAppBar(
         title = {
             Text(
@@ -86,19 +97,33 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
             )
         },
         navigationIcon = {
-            IconButton(onClick = { onButtonClicked() }) {
-            Icon(imageVector = buttonIcon, contentDescription = "")
-        }
-        },
-        backgroundColor = MaterialTheme.colors.primaryVariant
-    )
-}
+            IconButton(onClick = {
+                if (!isAnimRun) {
+                    isAnimRun = true
+                    scope.launch {
+                        val needsValue = selected.value
+                        while (selected.value < (needsValue + 360)) {
+                            selected.value += 7.5f
+                            delay(5)
+                        }
+                        isAnimRun = false
+                    }
+                }
+                // onButtonClicked()
+            }, modifier = Modifier.rotate(rotation.value)) {
+                Icon(imageVector = buttonIcon, contentDescription = "")
+            }
+            },
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+        )
+    }
 
-@Composable
-fun ItemsList(ui_items: List<ContentItem>) {
-    LazyColumn {
-        items(ui_items) {
-            ContentCard(content = it)
+    @Composable
+    fun ItemsList(ui_items: List<ContentItem>) {
+        LazyColumn {
+            items(ui_items) {
+                ContentCard(content = it)
+            }
         }
     }
-}
+    
