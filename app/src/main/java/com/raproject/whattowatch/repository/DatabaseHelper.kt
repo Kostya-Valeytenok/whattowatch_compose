@@ -1,10 +1,10 @@
 package com.raproject.whattowatch.repository
 
 import android.content.Context
+import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -19,38 +19,45 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     @Throws(IOException::class)
     fun updateDataBase() {
         if (mNeedUpdate) {
-            var maindb: SQLiteDatabase
-            maindb = try {
+            kotlin.runCatching {
                 this.writableDatabase
-            } catch (mSQLException: SQLException) {
-                throw mSQLException
-            }
-            val cur1 = maindb.rawQuery("select _Key from Wanttowatch", null)
-            val cur2 = maindb.rawQuery("select _Key from Saw", null)
-            cur1.moveToFirst()
-            cur2.moveToFirst()
-            maindb.close()
-            val dbFile = File(DB_PATH + DB_NAME)
-            if (dbFile.exists()) dbFile.delete()
-            copyDataBase()
-            mNeedUpdate = false
-            maindb = try {
-                this.writableDatabase
-            } catch (mSQLException: SQLException) {
-                throw mSQLException
-            }
-            while (!cur1.isAfterLast) {
-                maindb.execSQL("insert into Wanttowatch values (" + cur1.getInt(0) + ")")
-                cur1.moveToNext()
-            }
-            while (!cur2.isAfterLast) {
-                maindb.execSQL("insert into Saw values (" + cur2.getInt(0) + ")")
-                cur2.moveToNext()
-            }
-            maindb.close()
-            cur1.close()
-            cur2.close()
+            }.onSuccess { db -> db.tryToSaveOldData() }.onFailure { return }
         }
+    }
+
+    private fun SQLiteDatabase.tryToSaveOldData(){
+        val cur1 = rawQuery("select _Key from Wanttowatch", null)
+        val cur2 = rawQuery("select _Key from Saw", null)
+        cur1.moveToFirst()
+        cur2.moveToFirst()
+        close()
+        val dbFile = File(DB_PATH + DB_NAME)
+        if (dbFile.exists()) dbFile.delete()
+        copyDataBase()
+        mNeedUpdate = false
+
+        runCatching { this@DatabaseHelper.writableDatabase }
+            .onSuccess { db -> db.uploadOldUserDataToDB(cur1,cur2) }
+            .onFailure { return }
+    }
+
+    private fun SQLiteDatabase.uploadOldUserDataToDB(cur1: Cursor, cur2: Cursor) {
+
+        cur1.use {
+            while (it.isAfterLast) {
+                execSQL("insert into Wanttowatch values (${it.getInt(0)})")
+                it.moveToNext()
+            }
+        }
+
+        cur2.use {
+            while (it.isAfterLast) {
+                execSQL("insert into Saw values (${it.getInt(0)})")
+                it.moveToNext()
+            }
+        }
+
+        close()
     }
 
     private fun checkDataBase(): Boolean {
@@ -109,9 +116,6 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     }
 
     init {
-        if (Build.VERSION.SDK_INT >= 17) DB_PATH =
-            context.applicationInfo.dataDir + "/databases/" else DB_PATH =
-            "/data/data/" + context.packageName + "/databases/"
         mContext = context
         copyDataBase()
         this.readableDatabase
