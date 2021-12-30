@@ -28,7 +28,7 @@ class DataBase() : KoinComponent {
 
     suspend fun <T> execute(action: suspend (database: SQLiteDatabase) -> T): T {
         val database = getDataBase()
-        val data = kotlin.run { action(database) }
+        val data = action.invoke(database)
         database.close()
         helper.close()
         return data
