@@ -25,7 +25,7 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
         }
     }
 
-    private fun SQLiteDatabase.tryToSaveOldData(){
+    private fun SQLiteDatabase.tryToSaveOldData() {
         val cur1 = rawQuery("select _Key from Wanttowatch", null)
         val cur2 = rawQuery("select _Key from Saw", null)
         cur1.moveToFirst()
@@ -37,7 +37,7 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
         mNeedUpdate = false
 
         runCatching { this@DatabaseHelper.writableDatabase }
-            .onSuccess { db -> db.uploadOldUserDataToDB(cur1,cur2) }
+            .onSuccess { db -> db.uploadOldUserDataToDB(cur1, cur2) }
             .onFailure { return }
     }
 
