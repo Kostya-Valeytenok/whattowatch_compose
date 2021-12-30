@@ -2,6 +2,7 @@ package com.raproject.whattowatch.ui
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,8 +26,10 @@ import com.raproject.whattowatch.models.ContentItem
 fun ContentCard(content: ContentItem) {
     Card(
         elevation = 4.dp,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .fillMaxWidth()
+            .clickable(enabled = true,onClick = {}),
     ) {
 //
         Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {

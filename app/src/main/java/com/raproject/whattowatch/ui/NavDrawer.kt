@@ -2,6 +2,7 @@ package com.raproject.whattowatch.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Spacer as Spacer1
 import androidx.compose.material.*
@@ -25,10 +26,15 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
-fun Drawer() {
+fun Drawer(
+    type: DrawerScreen,
+    navigationAction: suspend (DrawerScreen) -> Unit
+) {
+    var scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,22 +54,38 @@ fun Drawer() {
                 )
         )
         Spacer1(Modifier.height(8.dp))
-        DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
 
-            MenuItem(screen = screen)
-            if (!isLast)
-                Divider(Modifier.height(1.dp).padding(start = 8.dp))
+        DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
+            val onClick = {
+                scope.launch { navigationAction.invoke(screen) }
+            }
+            MenuItem(screen = screen, type, onClick)
         }
     }
 }
 
 @Composable
-fun MenuItem(screen: DrawerScreen) {
+fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> Job) {
+
+    val backgroundColor = if (screen == currentScreen) {
+        val color = MaterialTheme.colors.primary
+        Color(
+            red = color.red,
+            blue = color.blue,
+            green = color.green,
+            alpha = 0.20f
+        )
+    } else MaterialTheme.colors.onPrimary
+
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .background(MaterialTheme.colors.onPrimary)
+            .background(backgroundColor)
+            .clickable(
+                enabled = true,
+                onClick = { onClick.invoke() }
+            ),
     ) {
         Spacer1(Modifier.height(8.dp))
         MenuItemContent(screen = screen)
@@ -124,38 +146,6 @@ fun Modifier.gradientBackground(colors: List<Color>, angle: Float) = this.then(
 @Preview
 @Composable
 fun DrawerPreview() {
-    Drawer()
-}
-
-@Composable
-fun DrawerAPHA() {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-
-    ModalDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            Drawer()
-        },
-        content = {
-            Column {
-                Text("Text in Bodycontext")
-                Button(
-                    onClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                ) {
-                    Text("Click to open")
-                }
-            }
-        },
-    )
-}
-
-@Preview
-@Composable
-fun DrawerAPHAPreview() {
-    DrawerAPHA()
+    val navigationAction: suspend (DrawerScreen) -> Unit = { }
+    Drawer(DrawerScreen.Movies, navigationAction)
 }

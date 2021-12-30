@@ -16,10 +16,7 @@ import androidx.compose.material.ModalDrawer
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,16 +24,21 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.R
 import com.raproject.whattowatch.models.ContentItem
-import com.raproject.whattowatch.utils.ContentType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-private fun ScreenBase(drawerState: DrawerState, screen: @Composable () -> Unit) {
+private fun ScreenBase(
+    drawerState: DrawerState,
+    type: DrawerScreen,
+    navigationAction: suspend (DrawerScreen) -> Unit,
+    screen: @Composable () -> Unit
+) {
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Drawer()
+            Drawer(type, navigationAction)
         },
         content = {
             screen()
@@ -45,9 +47,19 @@ private fun ScreenBase(drawerState: DrawerState, screen: @Composable () -> Unit)
 }
 
 @Composable
-fun ContentScreen(titlesList: List<ContentItem>, loadingVisibility: Boolean, type: ContentType) {
+fun ContentScreen(
+    titlesList: List<ContentItem>,
+    loadingVisibility: Boolean,
+    type: DrawerScreen,
+    navigationAction:  (DrawerScreen) -> Unit
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    ScreenBase(drawerState) {
+    val navigationActionWithDrawerState: suspend (DrawerScreen) -> Unit = {
+        drawerState.inverse()
+        navigationAction.invoke(it)
+
+    }
+    ScreenBase(drawerState, type, navigationActionWithDrawerState) {
         ContentView(series = titlesList, loadingVisibility, drawerState, type)
     }
 }
@@ -57,20 +69,21 @@ fun ContentView(
     series: List<ContentItem>,
     loadingVisibility: Boolean,
     drawerState: DrawerState,
-    type: ContentType
+    type: DrawerScreen
 ) {
     val scope = rememberCoroutineScope()
     Column {
-        TopBar(type.screenName, ImageVector.vectorResource(id = R.drawable.ic_menu)) {
-            scope.launch {
-                if (drawerState.isOpen)
-                    drawerState.close()
-                else drawerState.open()
-            }
+        TopBar(type.title, ImageVector.vectorResource(id = R.drawable.ic_menu)) {
+            scope.launch { drawerState.inverse() }
         }
         LoadingView(isDisplayed = loadingVisibility)
         ItemsList(ui_items = series)
     }
+}
+
+suspend fun DrawerState.inverse() {
+    if (isOpen) close()
+    else open()
 }
 
 @Composable
@@ -87,8 +100,8 @@ fun LoadingView(isDisplayed: Boolean) {
 @Composable
 fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> Unit) {
     val scope = rememberCoroutineScope()
-    val selected = remember { mutableStateOf(0f) }
-    val rotation = animateFloatAsState(selected.value)
+    val iconRotation = remember { mutableStateOf(0f) }
+    val rotation = animateFloatAsState(iconRotation.value)
     var isAnimRun = false
     TopAppBar(
         title = {
@@ -98,24 +111,28 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
         },
         navigationIcon = {
             IconButton(onClick = {
+                onButtonClicked()
                 if (!isAnimRun) {
                     isAnimRun = true
-                    scope.launch {
-                        val needsValue = selected.value
-                        while (selected.value < (needsValue + 360)) {
-                            selected.value += 7.5f
-                            delay(5)
-                        }
+                    scope.launch(Dispatchers.Default) {
+                        startAnim(iconRotation)
                         isAnimRun = false
                     }
                 }
-                // onButtonClicked()
             }, modifier = Modifier.rotate(rotation.value)) {
                 Icon(imageVector = buttonIcon, contentDescription = "")
             }
             },
             backgroundColor = MaterialTheme.colors.primaryVariant,
         )
+    }
+
+    suspend fun startAnim(iconRotation: MutableState<Float>) {
+        val needsValue = iconRotation.value
+        while (iconRotation.value < (needsValue + 360)) {
+            iconRotation.value += 7.5f
+            delay(5)
+        }
     }
 
     @Composable
