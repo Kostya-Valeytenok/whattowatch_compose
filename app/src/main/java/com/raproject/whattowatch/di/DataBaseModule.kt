@@ -1,6 +1,7 @@
 package com.raproject.whattowatch.di
 
 import com.raproject.whattowatch.models.ContentItem
+import com.raproject.whattowatch.models.OldUserData
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.repository.DatabaseHelper
 import com.raproject.whattowatch.repository.cases.core.AnimeCasesCore
@@ -22,4 +23,5 @@ var dataBaseCasesModule = module {
     single { AnimeCases() }
     single { AnimeCasesCore() }
     factory { params -> ContentItem(params[0], params[1], params[2], params[3], params[4]) }
+    factory { params -> OldUserData(params[0], params[1]) }
 }

@@ -5,13 +5,20 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.raproject.whattowatch.models.OldUserData
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db") :
-    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION), KoinComponent {
+
+    private var DB_PATH = " "
+
     private var mDataBase: SQLiteDatabase? = null
     private val mContext: Context
     private var mNeedUpdate = false
@@ -21,36 +28,52 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
         if (mNeedUpdate) {
             kotlin.runCatching {
                 this.writableDatabase
-            }.onSuccess { db -> db.tryToSaveOldData() }.onFailure { return }
+            }.onSuccess { db ->
+                val userData = db.getOldUserData()
+                updateDB()
+                tryToRestoreUserData(userData = userData)
+            }.onFailure { return }
         }
     }
 
-    private fun SQLiteDatabase.tryToSaveOldData() {
-        val cur1 = rawQuery("select _Key from Wanttowatch", null)
-        val cur2 = rawQuery("select _Key from Saw", null)
-        cur1.moveToFirst()
-        cur2.moveToFirst()
+    private fun SQLiteDatabase.getOldUserData(): OldUserData {
+        val wantToWatchCursor = rawQuery("select _Key from Wanttowatch", null)
+        val sawCursor = rawQuery("select _Key from Saw", null)
+        wantToWatchCursor.moveToFirst()
+        sawCursor.moveToFirst()
         close()
+        val oldUserData: OldUserData by inject { parametersOf(wantToWatchCursor, sawCursor) }
+        return oldUserData
+    }
+
+    private fun updateDB() {
         val dbFile = File(DB_PATH + DB_NAME)
         if (dbFile.exists()) dbFile.delete()
         copyDataBase()
         mNeedUpdate = false
+    }
 
+    private fun tryToRestoreUserData(userData: OldUserData) {
         runCatching { this@DatabaseHelper.writableDatabase }
-            .onSuccess { db -> db.uploadOldUserDataToDB(cur1, cur2) }
+            .onSuccess { db ->
+                db.uploadOldUserDataToDB(
+                    wantToWatchData = userData.wantToWatchCursor,
+                    sawData = userData.sawCursor
+                )
+            }
             .onFailure { return }
     }
 
-    private fun SQLiteDatabase.uploadOldUserDataToDB(cur1: Cursor, cur2: Cursor) {
+    private fun SQLiteDatabase.uploadOldUserDataToDB(wantToWatchData: Cursor, sawData: Cursor) {
 
-        cur1.use {
+        wantToWatchData.use {
             while (it.isAfterLast) {
                 execSQL("insert into Wanttowatch values (${it.getInt(0)})")
                 it.moveToNext()
             }
         }
 
-        cur2.use {
+        sawData.use {
             while (it.isAfterLast) {
                 execSQL("insert into Saw values (${it.getInt(0)})")
                 it.moveToNext()
@@ -110,12 +133,8 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
         if (newVersion > oldVersion) mNeedUpdate = true
     }
 
-    companion object {
-        private var DB_PATH = ""
-        private const val DB_VERSION = 116
-    }
-
     init {
+        DB_PATH = context.getApplicationInfo().dataDir + "/databases/"
         mContext = context
         copyDataBase()
         this.readableDatabase

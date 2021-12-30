@@ -29,10 +29,10 @@ fun ContentCard(content: ContentItem) {
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth()
-            .clickable(enabled = true,onClick = {}),
+            .clickable(enabled = true, onClick = {}),
     ) {
 //
-        Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(end = 8.dp)) {
             Column(
                 modifier = Modifier
                     .width(100.dp)
