@@ -8,11 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
 import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
-import kotlinx.coroutines.launch
 
 class AppActivity : ComponentActivity() {
 
@@ -21,13 +19,7 @@ class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var screens = DrawerScreen.screens
-        val navigationAction: (DrawerScreen) -> Unit = {
-            lifecycleScope.launch {
-                //  vm.screenTypeRX.value = it
-                vm.screenTypeRX.emit(it)
-            }
-        }
+        val navigationAction: (DrawerScreen) -> Unit = { vm.setScreenType(it) }
 
         setContent {
             WhattowatchTheme {

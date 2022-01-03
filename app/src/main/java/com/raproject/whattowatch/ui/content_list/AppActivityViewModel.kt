@@ -1,9 +1,5 @@
 package com.raproject.whattowatch.ui.content_list
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.repository.cases.MoviesCases
@@ -12,7 +8,6 @@ import com.raproject.whattowatch.ui.DrawerScreen
 import com.raproject.whattowatch.utils.BaseViewModel
 import com.raproject.whattowatch.utils.Localization
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

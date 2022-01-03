@@ -2,10 +2,10 @@ package com.raproject.whattowatch.repository
 
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.io.IOException
 import java.lang.Error
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class DataBase() : KoinComponent {
 
@@ -27,10 +27,6 @@ class DataBase() : KoinComponent {
     }
 
     suspend fun <T> execute(action: suspend (database: SQLiteDatabase) -> T): T {
-        val database = getDataBase()
-        val data = action.invoke(database)
-        database.close()
-        helper.close()
-        return data
+        return helper.use { getDataBase().use { database -> action.invoke(database) } }
     }
 }
