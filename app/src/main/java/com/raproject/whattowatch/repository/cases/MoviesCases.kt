@@ -13,9 +13,6 @@ class MoviesCases : KoinComponent {
     private val caseCore: MoviesCasesCore by inject()
 
     suspend fun getFilms(localization: Localization): List<ContentItem> {
-        return when (localization) {
-            Localization.English -> database.execute(caseCore.getMoviesENCore)
-            Localization.Russian -> database.execute(caseCore.getMoviesRUCore)
-        }
+        return database.execute(caseCore.contentRequest.invoke(localization))
     }
 }

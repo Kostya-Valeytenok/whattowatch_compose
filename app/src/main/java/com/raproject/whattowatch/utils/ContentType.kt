@@ -1,7 +1,7 @@
 package com.raproject.whattowatch.utils
 
-enum class ContentType(val tableName: String,val screenName:String) {
-    Movies("Films","Movies")
-    , Anime("Anime", "Anime"),
-    TVShows("Series", "TV Shows");
+enum class ContentType(val tableName: String) {
+    Movies(tableName = DBTable.Movies.tableName()),
+    Anime(tableName = DBTable.Anime.tableName()),
+    TVShows(tableName = DBTable.TVShows.tableName());
 }

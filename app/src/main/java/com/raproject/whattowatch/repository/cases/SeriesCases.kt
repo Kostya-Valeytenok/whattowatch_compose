@@ -13,9 +13,6 @@ class SeriesCases : KoinComponent {
     private val caseCore: SeriesCasesCore by inject()
 
     suspend fun getSeries(localization: Localization): List<ContentItem> {
-        return when (localization) {
-            Localization.English -> database.execute(caseCore.getTVShowsENCore)
-            Localization.Russian -> database.execute(caseCore.getTVShowsRUCore)
-        }
+        return database.execute(caseCore.contentRequest.invoke(localization))
     }
 }
