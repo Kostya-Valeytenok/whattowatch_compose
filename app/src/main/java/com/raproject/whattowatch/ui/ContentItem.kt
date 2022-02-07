@@ -2,10 +2,10 @@ package com.raproject.whattowatch.ui
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,15 +16,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.models.ContentItem
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ContentCard(content: ContentItem) {
     Card(
+        onClick = {
+        },
         elevation = 4.dp,
         modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-            .fillMaxWidth()
-            .clickable(enabled = true, onClick = {}),
-        shape = RoundedCornerShape(8.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp)
     ) {
 //
         Row(
@@ -43,7 +45,7 @@ fun ContentCard(content: ContentItem) {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-//            
+//
             }
             Column(
                 modifier = Modifier
@@ -73,10 +75,17 @@ fun ContentCard(content: ContentItem) {
         }
     }
 }
+
 @Preview
 @Composable
 fun CardPreview() {
     ContentCard(
-        content = ContentItem(key = 1, image = Bitmap.createBitmap(5, 5, Bitmap.Config.RGB_565), name = "Test name", genres = "test", year = "2021")
+        content = ContentItem(
+            key = 1,
+            image = Bitmap.createBitmap(5, 5, Bitmap.Config.RGB_565),
+            name = "Test name",
+            genres = "test",
+            year = "2021"
+        )
     )
 }

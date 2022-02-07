@@ -31,7 +31,6 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
                     DrawerScreen.Cartoons -> {}
                     DrawerScreen.Movies -> getContent { moviesCases.getFilms(Localization.English) }
                     DrawerScreen.Serials -> getContent { seriesCases.getSeries(Localization.English) } // ktlint-disable max-line-length
-                    DrawerScreen.Settings -> {}
                     DrawerScreen.Top100 -> {}
                     DrawerScreen.WantToWatch -> {}
                     DrawerScreen.Watched -> {}
@@ -44,10 +43,9 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
         viewModelScope.launch { screenTypeRX.emit(newType) }
     }
 
-    private fun getContent(contentRequest: suspend () -> List<ContentItem>) {
+    private suspend fun getContent(contentRequest: suspend () -> List<ContentItem>) {
         viewModelScope.launch(Dispatchers.Default) {
             loadingStatus.emit(true)
-            content.emit(listOf())
             content.emit(contentRequest.invoke())
             loadingStatus.emit(false)
         }

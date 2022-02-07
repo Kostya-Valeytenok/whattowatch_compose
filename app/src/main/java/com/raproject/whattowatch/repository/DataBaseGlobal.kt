@@ -1,3 +1,3 @@
 package com.raproject.whattowatch.repository
 
-const val DB_VERSION = 116
+const val DB_VERSION = 117

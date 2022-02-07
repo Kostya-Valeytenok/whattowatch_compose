@@ -3,89 +3,47 @@ package com.raproject.whattowatch.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.layout.Spacer as Spacer1
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.* // ktlint-disable no-wildcard-imports
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.raproject.whattowatch.utils.forEachIndexedWithLastMarker
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import com.raproject.whattowatch.ui.theme.White
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
-@Composable
-fun Drawer(
-    type: DrawerScreen,
-    navigationAction: suspend (DrawerScreen) -> Unit
-) {
-    var scope = rememberCoroutineScope()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.onPrimary)
-    ) {
-        Box(
-            modifier = Modifier
-                .height(176.dp)
-                .fillMaxWidth()
-                .gradientBackground(
-                    colors = listOf(
-                        Color(0xFFAA1888),
-                        Color(0xFF660756),
-                        Color(0xFF280236)
-                    ),
-                    angle = 135f
-                )
-        )
-        Spacer1(Modifier.height(8.dp))
-
-        DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
-            val onClick = {
-                scope.launch { navigationAction.invoke(screen) }
-            }
-            MenuItem(screen = screen, type, onClick)
-        }
-    }
-}
+val shape = RoundedCornerShape(
+    bottomEnd = 48.dp,
+    topEnd = 48.dp,
+)
 
 @Composable
 fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> Job) {
 
-    val backgroundColor = if (screen == currentScreen) {
-        val color = MaterialTheme.colors.primary
-        Color(
-            red = color.red,
-            blue = color.blue,
-            green = color.green,
-            alpha = 0.20f
-        )
-    } else MaterialTheme.colors.onPrimary
+    var modifier = Modifier
+        .padding(end = 8.dp)
+        .wrapContentHeight()
+        .fillMaxWidth()
+
+    modifier = if (screen == currentScreen) {
+        modifier.background(White.copy(alpha = 0.20f), shape = shape)
+    } else modifier.background(Color.Transparent, shape = shape)
 
     Column(
-        modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth()
-            .background(backgroundColor)
-            .clickable(
-                enabled = true,
-                onClick = { onClick.invoke() }
-            ),
+        modifier = modifier.clickable(
+            enabled = true,
+            interactionSource = MutableInteractionSource(),
+            indication = rememberRipple(bounded = true, radius = 2.dp),
+            onClick = { onClick.invoke() },
+        ),
     ) {
         Spacer1(Modifier.height(8.dp))
         MenuItemContent(screen = screen)
@@ -108,7 +66,7 @@ fun MenuItemContent(screen: DrawerScreen) {
                 top = 8.dp,
                 bottom = 8.dp
             ),
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
         )
         Text(
             text = screen.title,
@@ -116,36 +74,4 @@ fun MenuItemContent(screen: DrawerScreen) {
             fontSize = 14.sp
         )
     }
-}
-
-fun Modifier.gradientBackground(colors: List<Color>, angle: Float) = this.then(
-    Modifier.drawBehind {
-        val angleRad = angle / 180f * PI
-        val x = cos(angleRad).toFloat() // Fractional x
-        val y = sin(angleRad).toFloat() // Fractional y
-
-        val radius = sqrt(size.width.pow(2) + size.height.pow(2)) / 2f
-        val offset = center + Offset(x * radius, y * radius)
-
-        val exactOffset = Offset(
-            x = min(offset.x.coerceAtLeast(0f), size.width),
-            y = size.height - min(offset.y.coerceAtLeast(0f), size.height)
-        )
-
-        drawRect(
-            brush = Brush.linearGradient(
-                colors = colors,
-                start = Offset(size.width, size.height) - exactOffset,
-                end = exactOffset
-            ),
-            size = size
-        )
-    }
-)
-
-@Preview
-@Composable
-fun DrawerPreview() {
-    val navigationAction: suspend (DrawerScreen) -> Unit = { }
-    Drawer(DrawerScreen.Movies, navigationAction)
 }
