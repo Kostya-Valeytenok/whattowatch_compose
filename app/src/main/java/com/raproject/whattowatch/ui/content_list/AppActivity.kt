@@ -19,8 +19,8 @@ class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val navigationAction: (DrawerScreen) -> Unit = { vm.setScreenType(it) }
-
+        val navigationAction: suspend (DrawerScreen) -> Unit = { vm.setScreenType(it) }
+        DrawerScreen.screens
         setContent {
             WhattowatchTheme {
                 val content = vm.content.collectAsState().value
