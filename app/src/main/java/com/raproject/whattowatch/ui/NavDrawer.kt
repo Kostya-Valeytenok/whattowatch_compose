@@ -3,15 +3,15 @@ package com.raproject.whattowatch.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.layout.Spacer as Spacer1
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.* // ktlint-disable no-wildcard-imports
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -28,6 +28,7 @@ val shape = RoundedCornerShape(
 @Composable
 fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> Job) {
 
+    val scope = rememberCoroutineScope()
     var modifier = Modifier
         .padding(end = 8.dp)
         .wrapContentHeight()
@@ -38,12 +39,12 @@ fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> J
     } else modifier.background(Color.Transparent, shape = shape)
 
     Column(
-        modifier = modifier.clickable(
-            enabled = true,
-            interactionSource = MutableInteractionSource(),
-            indication = rememberRipple(bounded = true, radius = 2.dp),
-            onClick = { onClick.invoke() },
-        ),
+        modifier = modifier
+            .clip(RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp))
+            .clickable(
+                enabled = true,
+                onClick = { onClick.invoke() },
+            ),
     ) {
         Spacer1(Modifier.height(8.dp))
         MenuItemContent(screen = screen)
