@@ -12,6 +12,7 @@ import com.raproject.whattowatch.repository.cases.core.AnimeCasesCore
 import com.raproject.whattowatch.repository.cases.core.CartoonsCasesCore
 import com.raproject.whattowatch.repository.cases.core.MoviesCasesCore
 import com.raproject.whattowatch.repository.cases.core.SeriesCasesCore
+import com.raproject.whattowatch.utils.ContentProvider
 import com.raproject.whattowatch.utils.RequestManager
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
@@ -30,4 +31,5 @@ var dataBaseCasesModule = module {
     single { RequestManager() }
     factory { params -> ContentItem(params[0], params[1], params[2], params[3], params[4]) }
     factory { params -> OldUserData(params[0], params[1]) }
+    factory { ContentProvider() }
 }

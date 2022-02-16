@@ -12,7 +12,7 @@ class SeriesCases : KoinComponent {
     private val database: DataBase by inject()
     private val caseCore: SeriesCasesCore by inject()
 
-    suspend fun getSeries(localization: Localization): List<ContentItem> {
-        return database.execute(caseCore.contentRequest.invoke(localization))
+    suspend fun getSeries(localization: Localization, orderCommand: String): List<ContentItem> {
+        return database.execute(caseCore.contentRequest.invoke(localization, orderCommand))
     }
 }
