@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 object Settings {
 
     private val localizationState = MutableStateFlow(Localization.English)
-    private val orderTypeState = MutableStateFlow(OrderType.AscendingOrder)
+    private val orderTypeState = MutableStateFlow(OrderType.DescendingOrder)
     private val orderedRowState = MutableStateFlow(DBTable.MainTable.DevRating)
 
     val localization: StateFlow<Localization>
