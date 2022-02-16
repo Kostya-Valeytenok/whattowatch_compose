@@ -2,6 +2,7 @@ package com.raproject.whattowatch.ui.content_list
 
 import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentItem
+import com.raproject.whattowatch.repository.cases.CartoonsCases
 import com.raproject.whattowatch.repository.cases.MoviesCases
 import com.raproject.whattowatch.repository.cases.SeriesCases
 import com.raproject.whattowatch.ui.DrawerScreen
@@ -18,6 +19,7 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
 
     private val moviesCases: MoviesCases by inject()
     private val seriesCases: SeriesCases by inject()
+    private val cartoonsCases: CartoonsCases by inject()
 
     var content: MutableStateFlow<List<ContentItem>> = MutableStateFlow(mutableListOf())
     var loadingStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -28,7 +30,7 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
             screenTypeRX.collect { type ->
                 when (type) {
                     DrawerScreen.Anime -> {}
-                    DrawerScreen.Cartoons -> {}
+                    DrawerScreen.Cartoons -> getContent { cartoonsCases.getCartoons(Localization.English) }
                     DrawerScreen.Movies -> getContent { moviesCases.getFilms(Localization.English) }
                     DrawerScreen.Serials -> getContent { seriesCases.getSeries(Localization.English) } // ktlint-disable max-line-length
                     DrawerScreen.Top100 -> {}

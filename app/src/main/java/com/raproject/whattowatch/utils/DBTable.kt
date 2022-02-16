@@ -18,6 +18,7 @@ sealed class DBTable {
             Movies -> "Films"
             TVShows -> "Series"
             Posters -> "Posters"
+            Cartoons -> "Cartoons"
         }
     }
 
@@ -55,6 +56,11 @@ sealed class DBTable {
     }
 
     object Movies : DBTable() {
+        override val key: String
+            get() = "contentId"
+    }
+
+    object Cartoons : DBTable() {
         override val key: String
             get() = "contentId"
     }
