@@ -12,7 +12,7 @@ class MoviesCases : KoinComponent {
     private val database: DataBase by inject()
     private val caseCore: MoviesCasesCore by inject()
 
-    suspend fun getFilms(localization: Localization): List<ContentItem> {
-        return database.execute(caseCore.contentRequest.invoke(localization))
+    suspend fun getFilms(localization: Localization, orderCommand: String): List<ContentItem> {
+        return database.execute(caseCore.contentRequest.invoke(localization, orderCommand))
     }
 }

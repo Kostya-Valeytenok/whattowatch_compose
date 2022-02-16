@@ -12,8 +12,7 @@ class RequestManager {
     fun SQLiteDatabase.getContentCards(
         contentType: ContentType,
         localization: Localization,
-        order: OrderType = OrderType.AscendingOrder,
-        orderField: TableRow = mainTable.DevRating
+        orderCommand: String = ""
     ): Cursor {
         // _Key, Image, Title, Year, Rating1
         val contentTable = mainTable.tableName(localization)
@@ -21,7 +20,7 @@ class RequestManager {
         val cardContentFields = mainTable.cardContentFields.joinToString()
         println("|$cardContentFields|")
         val contentCursor = rawQuery(
-            "select $cardContentFields from $contentTable where $key in (${selectAllIn(contentType.tableName)})${order.by(orderField)}", // ktlint-disable max-line-length
+            "select $cardContentFields from $contentTable where $key in (${selectAllIn(contentType.tableName)})$orderCommand", // ktlint-disable max-line-length
             null
         )
         contentCursor.moveToFirst()

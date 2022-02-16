@@ -13,11 +13,11 @@ import org.koin.core.parameter.parametersOf
 
 abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponent {
 
-    val contentRequest: suspend (Localization) ->
-    suspend (SQLiteDatabase) -> List<ContentItem> = { locale ->
+    val contentRequest: suspend (Localization, String) ->
+    suspend (SQLiteDatabase) -> List<ContentItem> = { locale, orderCommand ->
 
         val request: suspend (SQLiteDatabase) -> List<ContentItem> = { db ->
-            getContentCoreRequest(db, locale)
+            getContentCoreRequest(db, locale, orderCommand)
         }
 
         request
@@ -25,11 +25,13 @@ abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponen
 
     override suspend fun getContentCoreRequest(
         database: SQLiteDatabase,
-        localization: Localization
+        localization: Localization,
+        orderCommand: String
     ): List<ContentItem> {
 
-        return with(requestManager) { database.getContentCards(contentType, localization) }
-            .use { it.prepareContentItemList(localization, database) }
+        return with(requestManager) {
+            database.getContentCards(contentType, localization, orderCommand)
+        }.use { it.prepareContentItemList(localization, database) }
     }
 
     private suspend fun Cursor.prepareContentItemList(

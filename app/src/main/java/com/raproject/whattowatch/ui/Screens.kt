@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.models.ContentItem
+import com.raproject.whattowatch.utils.Localization
+import com.raproject.whattowatch.utils.Settings
 import com.raproject.whattowatch.utils.forEachIndexedWithLastMarker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -124,6 +126,11 @@ private fun ScreenBase(
 
                     IconButton(
                         onClick = {
+                            scope.launch {
+                                if(Settings.localization.value == Localization.English)
+                                    Settings.setLocale(Localization.Russian)
+                                else Settings.setLocale(Localization.English)
+                            }
                         }
                     ) {
                         Icon(Icons.Default.Settings, contentDescription = "Settings")

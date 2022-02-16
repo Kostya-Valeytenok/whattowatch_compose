@@ -12,7 +12,7 @@ class CartoonsCases : KoinComponent {
     private val database: DataBase by inject()
     private val caseCore: CartoonsCasesCore by inject()
 
-    suspend fun getCartoons(localization: Localization): List<ContentItem> {
-        return database.execute(caseCore.contentRequest.invoke(localization))
+    suspend fun getCartoons(localization: Localization, orderCommand: String): List<ContentItem> {
+        return database.execute(caseCore.contentRequest.invoke(localization, orderCommand))
     }
 }

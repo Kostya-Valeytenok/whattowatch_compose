@@ -25,7 +25,8 @@ abstract class BaseCore<T> : KoinComponent {
 
     protected abstract suspend fun getContentCoreRequest(
         database: SQLiteDatabase,
-        localization: Localization
+        localization: Localization,
+        orderCommand: String
     ): T
 
     private suspend fun getGenresENAsync(
