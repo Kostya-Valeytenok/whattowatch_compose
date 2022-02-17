@@ -6,6 +6,20 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import com.raproject.whattowatch.models.ContentItem
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun ContentScreen(
+    titlesList: List<ContentItem>,
+    loadingVisibility: Boolean,
+    type: DrawerScreen,
+    navigationAction: suspend (DrawerScreen) -> Unit
+) {
+
+    ScreenBase(type, loadingVisibility, navigationAction) {
+        ContentView(series = titlesList, loadingVisibility)
+    }
+}
+
 @ExperimentalAnimationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,20 +50,6 @@ private fun ScreenBase(
         frontLayerContent = { screen() },
         backLayerBackgroundColor = MaterialTheme.colors.primaryVariant
     )
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun ContentScreen(
-    titlesList: List<ContentItem>,
-    loadingVisibility: Boolean,
-    type: DrawerScreen,
-    navigationAction: suspend (DrawerScreen) -> Unit
-) {
-
-    ScreenBase(type, loadingVisibility, navigationAction) {
-        ContentView(series = titlesList, loadingVisibility)
-    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
