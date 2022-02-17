@@ -7,5 +7,6 @@ data class ContentItem(
     var image: Bitmap,
     var name: String,
     var year: String,
-    var genres: String
+    var genres: String,
+    var rating: String? = null
 )

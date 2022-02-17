@@ -1,10 +1,7 @@
 package com.raproject.whattowatch.utils
 
 import com.raproject.whattowatch.models.ContentItem
-import com.raproject.whattowatch.repository.cases.AnimeCases
-import com.raproject.whattowatch.repository.cases.CartoonsCases
-import com.raproject.whattowatch.repository.cases.MoviesCases
-import com.raproject.whattowatch.repository.cases.SeriesCases
+import com.raproject.whattowatch.repository.cases.*
 import com.raproject.whattowatch.ui.DrawerScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +22,7 @@ class ContentProvider : KoinComponent {
     private val seriesCases: SeriesCases by inject()
     private val cartoonsCases: CartoonsCases by inject()
     private val animeCases: AnimeCases by inject()
+    private val top100Cases: Top100Cases by inject()
 
     suspend fun getScreenContent(
         screen: MutableStateFlow<DrawerScreen>
@@ -41,7 +39,8 @@ class ContentProvider : KoinComponent {
                     getContent { moviesCases.getFilms(localization, orderType.by(orderedRow)) }
                 DrawerScreen.Serials ->
                     getContent { seriesCases.getSeries(localization, orderType.by(orderedRow)) }
-                DrawerScreen.Top100 -> listOf()
+                DrawerScreen.Top100 ->
+                    getContent { top100Cases.getTop100(localization, OrderType.DescendingOrder.by(DBTable.MainTable.DevRating)) }
                 DrawerScreen.WantToWatch -> listOf()
                 DrawerScreen.Watched -> listOf()
             }
