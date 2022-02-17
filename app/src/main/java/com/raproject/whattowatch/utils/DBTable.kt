@@ -34,7 +34,10 @@ sealed class DBTable {
         val Description = TableRow("description")
         val Image = TableRow("image")
 
-        val cardContentFields = listOf<String>(key, Image.name, Title.name, Year.name, DevRating.name) // ktlint-disable max-line-length
+        val cardContentFields = listOf(key, Image.name, Title.name, Year.name) // ktlint-disable max-line-length
+        val cardContentFieldsWithRating = listOf(
+            key, Image.name, Title.name, Year.name, DevRating.name
+        )
 
         override val key: String
             get() = "contentId"
