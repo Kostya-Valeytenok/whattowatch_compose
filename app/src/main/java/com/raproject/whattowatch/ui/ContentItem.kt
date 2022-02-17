@@ -18,7 +18,7 @@ import com.raproject.whattowatch.models.ContentItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ContentCard(content: ContentItem) {
+fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
     Card(
         onClick = {
         },
@@ -37,7 +37,7 @@ fun ContentCard(content: ContentItem) {
         ) {
             Column(
                 modifier = Modifier
-                    .width(115.dp)
+                    .fillMaxWidth(0.35f)
             ) {
                 Image(
                     contentDescription = "Poster",
@@ -71,6 +71,22 @@ fun ContentCard(content: ContentItem) {
                         .padding(top = 2.dp)
                         .fillMaxWidth()
                 )
+                content.rating?.let {
+                    Text(
+                        text = "Rate: ${content.rating}",
+                        Modifier
+                            .padding(top = 2.dp)
+                            .fillMaxWidth()
+                    )
+
+                    Text(
+                        text = "Place in the ranking: $ratingNumber",
+                        Modifier
+                            .padding(top = 2.dp)
+                            .fillMaxWidth(),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

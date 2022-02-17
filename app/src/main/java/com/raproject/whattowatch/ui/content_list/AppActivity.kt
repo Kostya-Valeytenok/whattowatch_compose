@@ -7,7 +7,10 @@ import androidx.activity.viewModels
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
@@ -23,6 +26,7 @@ class AppActivity : ComponentActivity() {
         DrawerScreen.screens
         setContent {
             WhattowatchTheme {
+
                 val content = vm.content.collectAsState().value
                 val loadingVisibility = vm.loadingStatus.collectAsState().value
                 val type = vm.screenTypeRX.collectAsState().value

@@ -4,12 +4,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import com.raproject.whattowatch.models.ContentItem
+import com.raproject.whattowatch.utils.ContentType
 import com.raproject.whattowatch.utils.Localization
 import com.raproject.whattowatch.utils.asyncJob
 import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
-import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 
 abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponent {
 
@@ -39,30 +38,44 @@ abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponen
         database: SQLiteDatabase
     ): List<ContentItem> = withContext(Dispatchers.Default) {
         val items = mutableListOf<ContentItem>()
+        val taskList = createTaskList(database = database, localization = localization)
+        taskList.forEach { items.add(it.await()) }
+        items
+    }
+
+    private suspend fun Cursor.createTaskList(
+        database: SQLiteDatabase,
+        localization: Localization,
+    ): MutableList<Deferred<ContentItem>> {
         val taskList = mutableListOf<Deferred<ContentItem>>()
         while (!isAfterLast) {
             val id = getString(0)
             val title = getString(2)
             val year = getString(3)
+            val rating = when (contentType) {
+                ContentType.Top100 -> getString(4)
+                else -> null
+            }
             taskList.add(
-                database.createItemTask(
+                database.createItemTaskAsync(
                     contentId = id,
                     title = title,
                     titleReleaseYear = year,
-                    localization = localization
+                    localization = localization,
+                    rating = rating
                 )
             )
             moveToNext()
         }
-        taskList.forEach { items.add(it.await()) }
-        items
+        return taskList
     }
 
-    private suspend fun SQLiteDatabase.createItemTask(
+    private suspend fun SQLiteDatabase.createItemTaskAsync(
         contentId: String,
         title: String,
         titleReleaseYear: String,
         localization: Localization,
+        rating: String? = null
     ): Deferred<ContentItem> = asyncJob {
         val genesTemp: String
         val posterData: Cursor
@@ -71,7 +84,7 @@ abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponen
         val porterTask = getPostersCursorAsync(contentId, this)
         genesTemp = genresTask.await()
         posterData = porterTask.await()
-        createItem(contentId, title, titleReleaseYear, posterData, genesTemp)
+        createItem(contentId, title, titleReleaseYear, posterData, genesTemp, rating)
     }
 
     private fun createItem(
@@ -79,17 +92,16 @@ abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponen
         title: String,
         titleReleaseYear: String,
         posterData: Cursor,
-        genesTemp: String
+        genesTemp: String,
+        rating: String? = null
     ): ContentItem {
-        val item: ContentItem by inject {
-            parametersOf(
-                id.toInt(),
-                BitmapFactory.decodeByteArray(posterData.getBlob(0), 0, posterData.getBlob(0)!!.size), // ktlint-disable max-line-length
-                title,
-                titleReleaseYear,
-                genesTemp
-            )
-        }
-        return item
+        return ContentItem(
+            id.toInt(),
+            BitmapFactory.decodeByteArray(posterData.getBlob(0), 0, posterData.getBlob(0)!!.size), // ktlint-disable max-line-length
+            title,
+            titleReleaseYear,
+            genesTemp,
+            rating
+        )
     }
 }

@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
-import androidx.compose.foundation.layout.Spacer as Spacer1
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.* // ktlint-disable no-wildcard-imports
 import androidx.compose.runtime.Composable
@@ -18,17 +18,46 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raproject.whattowatch.ui.theme.White
+import com.raproject.whattowatch.utils.forEachIndexedWithLastMarker
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-val shape = RoundedCornerShape(
+private val shape = RoundedCornerShape(
     bottomEnd = 48.dp,
     topEnd = 48.dp,
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> Job) {
-
+fun MenuView(
+    currentScreenType: DrawerScreen,
+    scaffoldState: BackdropScaffoldState,
+    navigationAction: suspend (DrawerScreen) -> Unit
+) {
     val scope = rememberCoroutineScope()
+
+    DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
+        val onClick = {
+            scope.launch(Dispatchers.Default) {
+                if (!scaffoldState.isConcealed) {
+                    scaffoldState.conceal()
+                }
+                delay(100)
+                navigationAction.invoke(screen)
+            }
+        }
+        MenuItem(screen = screen, currentScreenType, onClick)
+
+        Spacer(modifier = Modifier.height(2.dp))
+    }
+    Spacer(modifier = Modifier.height(6.dp))
+}
+
+@Composable
+private fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> Job) {
+
     var modifier = Modifier
         .padding(end = 8.dp)
         .wrapContentHeight()
@@ -46,14 +75,14 @@ fun MenuItem(screen: DrawerScreen, currentScreen: DrawerScreen, onClick: () -> J
                 onClick = { onClick.invoke() },
             ),
     ) {
-        Spacer1(Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         MenuItemContent(screen = screen)
-        Spacer1(Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
     }
 }
 
 @Composable
-fun MenuItemContent(screen: DrawerScreen) {
+private fun MenuItemContent(screen: DrawerScreen) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically

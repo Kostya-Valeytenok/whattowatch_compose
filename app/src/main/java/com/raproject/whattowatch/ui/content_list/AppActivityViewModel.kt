@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -24,7 +25,7 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
     init {
 
         viewModelScope.launch(Dispatchers.Default) {
-            contentProvider.getScreenContent(screenTypeRX).collect {
+            contentProvider.getScreenContent(screenTypeRX).distinctUntilChanged().collect {
                 content.emit(it)
             }
         }

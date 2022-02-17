@@ -2,6 +2,8 @@ package com.raproject.whattowatch.utils
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RequestManager {
 
@@ -9,22 +11,30 @@ class RequestManager {
     private val genresTable = DBTable.GenresTable
     private val portersTable = DBTable.Posters
 
-    fun SQLiteDatabase.getContentCards(
+    suspend fun SQLiteDatabase.getContentCards(
         contentType: ContentType,
         localization: Localization,
         orderCommand: String = ""
-    ): Cursor {
+    ): Cursor = withContext(Dispatchers.Default) {
         // _Key, Image, Title, Year, Rating1
         val contentTable = mainTable.tableName(localization)
         val key = mainTable.key
-        val cardContentFields = mainTable.cardContentFields.joinToString()
+        val cardContentFields = if (contentType == ContentType.Top100)
+            mainTable.cardContentFieldsWithRating.joinToString()
+        else mainTable.cardContentFields.joinToString()
         println("|$cardContentFields|")
-        val contentCursor = rawQuery(
+
+        val contentCursor = if (contentType == ContentType.Top100) {
+            rawQuery(
+                "select $cardContentFields from $contentTable where $key in (${selectAllForTop(contentType,localization,orderCommand)})$orderCommand", // ktlint-disable max-line-length
+                null
+            )
+        } else rawQuery(
             "select $cardContentFields from $contentTable where $key in (${selectAllIn(contentType.tableName)})$orderCommand", // ktlint-disable max-line-length
             null
         )
         contentCursor.moveToFirst()
-        return contentCursor
+        return@withContext contentCursor
     }
 
     fun SQLiteDatabase.getGenresForTitle(
@@ -49,6 +59,25 @@ class RequestManager {
         )
         posterData.moveToFirst()
         return posterData
+    }
+
+    private fun SQLiteDatabase.selectAllForTop(
+        type: ContentType,
+        localization: Localization,
+        orderCommand: String
+    ): String {
+        return if (type == ContentType.Top100) {
+            val contentTable = mainTable.tableName(localization)
+            rawQuery("select ${mainTable.key} from $contentTable$orderCommand LIMIT 100", null).use {
+                it.moveToFirst()
+                val idList = mutableListOf<String>()
+                while (!it.isAfterLast) {
+                    idList.add(it.getString(0))
+                    it.moveToNext()
+                }
+                idList.joinToString()
+            }
+        } else selectAllIn(table = type.tableName)
     }
 
     private fun selectAllIn(table: String): String = "select * from $table"
