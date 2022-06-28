@@ -1,6 +1,5 @@
 package com.raproject.whattowatch.di
 
-import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.models.OldUserData
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.repository.DatabaseHelper

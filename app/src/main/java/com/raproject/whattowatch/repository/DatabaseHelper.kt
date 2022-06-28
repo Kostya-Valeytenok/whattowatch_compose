@@ -10,8 +10,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 
 class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db") :
@@ -26,7 +26,7 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     @Throws(IOException::class)
     fun updateDataBase() {
         if (mNeedUpdate) {
-            kotlin.runCatching {
+            runCatching {
                 this.writableDatabase
             }.onSuccess { db ->
                 val userData = db.getOldUserData()

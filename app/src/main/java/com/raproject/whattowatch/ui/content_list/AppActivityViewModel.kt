@@ -8,11 +8,10 @@ import com.raproject.whattowatch.utils.ContentProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class AppActivityViewModel : BaseViewModel(), KoinComponent {
 
@@ -20,18 +19,18 @@ class AppActivityViewModel : BaseViewModel(), KoinComponent {
 
     var content: MutableStateFlow<List<ContentItem>> = MutableStateFlow(mutableListOf())
     var loadingStatus: StateFlow<Boolean> = contentProvider.loadingStatus
-    val screenTypeRX: MutableStateFlow<DrawerScreen> = MutableStateFlow(DrawerScreen.Movies)
+    val screenTypeState: MutableStateFlow<DrawerScreen> = MutableStateFlow(DrawerScreen.Movies)
 
     init {
 
         viewModelScope.launch(Dispatchers.Default) {
-            contentProvider.getScreenContent(screenTypeRX).distinctUntilChanged().collect {
+            contentProvider.getScreenContent(screenTypeState).distinctUntilChanged().collect {
                 content.emit(it)
             }
         }
     }
 
     fun setScreenType(newType: DrawerScreen) {
-        viewModelScope.launch { screenTypeRX.emit(newType) }
+        viewModelScope.launch { screenTypeState.emit(newType) }
     }
 }

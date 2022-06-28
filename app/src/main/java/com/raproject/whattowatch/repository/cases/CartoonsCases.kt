@@ -4,8 +4,8 @@ import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.repository.cases.core.CartoonsCasesCore
 import com.raproject.whattowatch.utils.Localization
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class CartoonsCases : KoinComponent {
 

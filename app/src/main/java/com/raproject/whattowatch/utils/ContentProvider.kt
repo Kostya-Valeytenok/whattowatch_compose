@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import com.raproject.whattowatch.utils.Settings.localization
 import com.raproject.whattowatch.utils.Settings.orderType
 import com.raproject.whattowatch.utils.Settings.orderedRow

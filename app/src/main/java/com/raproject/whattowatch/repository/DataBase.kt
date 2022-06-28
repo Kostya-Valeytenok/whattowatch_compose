@@ -4,8 +4,8 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import java.io.IOException
 import java.lang.Error
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class DataBase() : KoinComponent {
 
