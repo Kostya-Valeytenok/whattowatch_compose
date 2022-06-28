@@ -26,13 +26,17 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     @Throws(IOException::class)
     fun updateDataBase() {
         if (mNeedUpdate) {
-            runCatching {
-                this.writableDatabase
-            }.onSuccess { db ->
-                val userData = db.getOldUserData()
-                updateDB()
-                tryToRestoreUserData(userData = userData)
-            }.onFailure { return }
+            var oldUserData: OldUserData? = null
+            completeForWritable { oldUserData = getOldUserData() }
+            oldUserData?.let {
+                mDataBase?.beginTransaction()
+                completeForWritable { updateDB() }
+                completeForWritable {
+                    tryToRestoreUserData(userData = it)
+                        .onSuccess { this@DatabaseHelper.mDataBase?.setTransactionSuccessful() }
+                }
+                mDataBase?.endTransaction()
+            }
         }
     }
 
@@ -53,15 +57,11 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
         mNeedUpdate = false
     }
 
-    private fun tryToRestoreUserData(userData: OldUserData) {
-        runCatching { this@DatabaseHelper.writableDatabase }
-            .onSuccess { db ->
-                db.uploadOldUserDataToDB(
-                    wantToWatchData = userData.wantToWatchCursor,
-                    sawData = userData.sawCursor
-                )
-            }
-            .onFailure { return }
+    private fun SQLiteDatabase.tryToRestoreUserData(userData: OldUserData) = runCatching {
+        uploadOldUserDataToDB(
+            wantToWatchData = userData.wantToWatchCursor,
+            sawData = userData.sawCursor
+        )
     }
 
     private fun SQLiteDatabase.uploadOldUserDataToDB(wantToWatchData: Cursor, sawData: Cursor) {
