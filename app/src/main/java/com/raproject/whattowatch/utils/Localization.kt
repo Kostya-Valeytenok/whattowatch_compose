@@ -1,5 +1,7 @@
 package com.raproject.whattowatch.utils
 
-enum class Localization(key: String) {
+import java.io.Serializable
+
+enum class Localization(key: String) : Serializable {
     Russian("ru"), English("en")
 }

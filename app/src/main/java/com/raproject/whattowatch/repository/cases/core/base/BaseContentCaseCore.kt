@@ -8,7 +8,7 @@ import com.raproject.whattowatch.utils.ContentType
 import com.raproject.whattowatch.utils.Localization
 import com.raproject.whattowatch.utils.asyncJob
 import kotlinx.coroutines.*
-import org.koin.core.KoinComponent
+import org.koin.core.component.KoinComponent
 
 abstract class BaseContentCaseCore : BaseCore<List<ContentItem>>(), KoinComponent {
 
