@@ -1,9 +1,6 @@
 package com.raproject.whattowatch.di
 
-import com.raproject.whattowatch.repository.cases.GetCartoonsUseCase
-import com.raproject.whattowatch.repository.cases.GetMoviesUseCase
-import com.raproject.whattowatch.repository.cases.GetTVShowsUseCase
-import com.raproject.whattowatch.repository.cases.GetTop100UseCase
+import com.raproject.whattowatch.repository.cases.*
 import org.koin.dsl.module
 
 val useCasesModel = module {
@@ -11,4 +8,5 @@ val useCasesModel = module {
     single { GetCartoonsUseCase(get()) }
     single { GetMoviesUseCase(get()) }
     single { GetTVShowsUseCase(get()) }
+    single { GetAmineUseCase(get()) }
 }
