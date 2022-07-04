@@ -23,4 +23,6 @@ open class Request {
         yield()
         moveToNext()
     }
+
+    fun command(@Language("SQL") sqlCommand: String):String = sqlCommand
 }
