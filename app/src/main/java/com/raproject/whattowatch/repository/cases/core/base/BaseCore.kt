@@ -4,10 +4,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.raproject.whattowatch.utils.ContentType
 import com.raproject.whattowatch.utils.Localization
-import com.raproject.whattowatch.utils.RequestManager
+import com.raproject.whattowatch.repository.RequestManager
 import kotlinx.coroutines.*
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 abstract class BaseCore<T> : KoinComponent {
 

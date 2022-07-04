@@ -1,6 +1,8 @@
 package com.raproject.whattowatch.utils
 
-enum class ContentType(val tableName: String) {
+import java.io.Serializable
+
+enum class ContentType(val tableName: String) : Serializable {
     Movies(tableName = DBTable.Movies.tableName()),
     Anime(tableName = DBTable.Anime.tableName()),
     TVShows(tableName = DBTable.TVShows.tableName()),

@@ -1,13 +1,10 @@
 package com.raproject.whattowatch.repository
 
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import com.raproject.whattowatch.repository.request.GetRequest
 import com.raproject.whattowatch.repository.request.PostRequest
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.io.IOException
-import java.lang.Error
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

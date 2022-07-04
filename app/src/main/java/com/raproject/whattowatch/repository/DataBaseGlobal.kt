@@ -3,6 +3,7 @@ package com.raproject.whattowatch.repository
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.raproject.whattowatch.repository.request.GetRequest
 
 const val DB_VERSION = 117
 
@@ -23,4 +24,8 @@ fun SQLiteOpenHelper.getWritableDB(): SQLiteDatabase {
         throw mSQLException
     }
     return dataBase
+}
+
+suspend fun <T> GetRequest<T>.run(scope:SQLiteDatabase) : T{
+   return scope.runRequest()
 }
