@@ -7,6 +7,13 @@ plugins {
 android {
     compileSdk 31
 
+    testOptions {
+        unitTests {
+            unitTests.returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
+
     defaultConfig {
         applicationId "com.raproject.whattowatch"
         minSdk 24
@@ -31,8 +38,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.DelicateCoroutinesApi"
+        freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
+        freeCompilerArgs+="-opt-in=kotlin.RequiresOptIn"
     }
+
     buildFeatures {
         compose true
     }
@@ -48,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.test.ext:junit-ktx:1.1.3'
     def room_version = "2.3.0"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
@@ -56,7 +68,7 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
+
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -67,9 +79,18 @@ dependencies {
 
     implementation "io.insert-koin:koin-android:3.2.0"
     implementation "io.insert-koin:koin-androidx-compose:3.2.0"
+    implementation "io.insert-koin:koin-core:3.2.0"
+    testImplementation "io.insert-koin:koin-test:3.2.0"
+    testImplementation "io.insert-koin:koin-test-junit4:3.2.0"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.0"
     implementation("io.coil-kt:coil:2.1.0")
     implementation("io.coil-kt:coil-compose:2.1.0")
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.8.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3'
+
+    testImplementation "io.mockk:mockk:1.12.4"
 }
