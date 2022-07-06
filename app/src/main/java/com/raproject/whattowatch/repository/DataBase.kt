@@ -17,10 +17,6 @@ class DataBase() : KoinComponent {
         return helper.getWritableDB()
     }
 
-    suspend fun <T> execute(action: suspend (database: SQLiteDatabase) -> T): T {
-        return helper.use { getDataBase().use { database -> action.invoke(database) } }
-    }
-
     private val mutex = Mutex()
 
     suspend fun <T> execute(request: GetRequest<T>): T {

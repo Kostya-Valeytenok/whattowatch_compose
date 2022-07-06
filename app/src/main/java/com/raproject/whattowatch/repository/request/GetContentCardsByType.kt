@@ -62,13 +62,13 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
     }
 
     private suspend fun SQLiteDatabase.getTop100ByDevRating():String{
-        val getTop100ByDevRatingRequest:GetTop100ByDevRating by inject {
-            parametersOf(GetTop100ByDevRating.createParams(
+        val getTop100Request:GetTop100 by inject {
+            parametersOf(GetTop100.createParams(
                 localization = localization,
                 orderCommand = orderCommand
             ))
         }
-        return with(getTop100ByDevRatingRequest){ runRequest() }
+        return with(getTop100Request){ runRequest() }
     }
 
     private suspend fun Cursor.prepareContentItemList(database: SQLiteDatabase): List<ContentItem> = withContext(Dispatchers.Default) {

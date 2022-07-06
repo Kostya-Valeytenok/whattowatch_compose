@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.raproject.whattowatch.utils.DBTable
 import com.raproject.whattowatch.utils.Localization
 
-class GetTop100ByDevRating(params:Bundle) : GetRequest<String>() {
+class GetTop100(params:Bundle) : GetRequest<String>() {
 
 
     companion object {

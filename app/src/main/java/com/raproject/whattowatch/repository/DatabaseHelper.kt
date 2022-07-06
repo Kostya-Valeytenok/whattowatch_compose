@@ -29,13 +29,16 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
             var oldUserData: OldUserData? = null
             completeForWritable { oldUserData = getOldUserData() }
             oldUserData?.let {
-                mDataBase?.beginTransaction()
-                completeForWritable { updateDB() }
-                completeForWritable {
-                    tryToRestoreUserData(userData = it)
-                        .onSuccess { this@DatabaseHelper.mDataBase?.setTransactionSuccessful() }
+                runCatching {
+                    val db =  getWritableDB()
+                    db.beginTransaction()
+                    completeForWritable { updateDB() }
+                    completeForWritable {
+                        tryToRestoreUserData(userData = it)
+                            .onSuccess { this@DatabaseHelper.mDataBase?.setTransactionSuccessful() }
+                    }
+                    db.endTransaction()
                 }
-                mDataBase?.endTransaction()
             }
         }
     }
@@ -134,7 +137,7 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     }
 
     init {
-        DB_PATH = context.getApplicationInfo().dataDir + "/databases/"
+        DB_PATH = context.applicationInfo.dataDir + "/databases/"
         mContext = context
         copyDataBase()
         this.readableDatabase
