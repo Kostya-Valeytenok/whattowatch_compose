@@ -1,7 +1,9 @@
 package com.raproject.whattowatch
 
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.GlobalContext
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 
@@ -31,5 +33,10 @@ class ShadowDatabaseTest {
         fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from MainTableEN", null).use {
             assertEquals(3,it.count)
         }
+    }
+
+    @After
+    fun tearDown() {
+        GlobalContext.stopKoin()
     }
 }
