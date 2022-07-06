@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.repository.cases
+package com.raproject.whattowatch.repository.use_case
 
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.models.GetContentModel

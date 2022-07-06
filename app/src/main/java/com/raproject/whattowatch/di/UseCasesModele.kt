@@ -1,6 +1,6 @@
 package com.raproject.whattowatch.di
 
-import com.raproject.whattowatch.repository.cases.*
+import com.raproject.whattowatch.repository.use_case.*
 import org.koin.dsl.module
 
 val useCasesModel = module {

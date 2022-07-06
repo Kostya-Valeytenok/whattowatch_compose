@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.repository.cases
+package com.raproject.whattowatch.repository.use_case
 
 import com.raproject.whattowatch.repository.Repository
 import org.koin.core.component.KoinComponent

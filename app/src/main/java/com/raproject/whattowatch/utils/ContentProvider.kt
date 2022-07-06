@@ -2,7 +2,7 @@ package com.raproject.whattowatch.utils
 
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.models.GetContentModel
-import com.raproject.whattowatch.repository.cases.*
+import com.raproject.whattowatch.repository.use_case.*
 import com.raproject.whattowatch.ui.DrawerScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
