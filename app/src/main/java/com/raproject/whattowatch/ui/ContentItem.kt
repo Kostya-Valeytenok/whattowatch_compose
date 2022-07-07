@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +42,7 @@ fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
             ) {
                 Image(
                     contentDescription = "Poster",
-                    bitmap = content.image.asImageBitmap(),
+                    bitmap = content.image?.asImageBitmap()?: ImageBitmap(60,80),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )

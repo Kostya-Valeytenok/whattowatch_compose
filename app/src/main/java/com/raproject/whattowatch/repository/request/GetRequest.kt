@@ -5,5 +5,5 @@ import android.os.Bundle
 
 abstract class GetRequest<T>(requestParams: Bundle = Bundle()) : Request() {
 
-    abstract suspend fun SQLiteDatabase.runRequest(): T
+    abstract suspend fun SQLiteDatabase.runRequest(): Result<T>
 }

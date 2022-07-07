@@ -26,6 +26,6 @@ fun SQLiteOpenHelper.getWritableDB(): SQLiteDatabase {
     return dataBase
 }
 
-suspend fun <T> GetRequest<T>.run(scope:SQLiteDatabase) : T{
+suspend fun <T> GetRequest<T>.run(scope:SQLiteDatabase) : Result<T> {
    return scope.runRequest()
 }

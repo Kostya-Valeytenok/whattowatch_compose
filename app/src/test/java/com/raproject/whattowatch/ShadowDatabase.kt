@@ -340,7 +340,7 @@ class ShadowDatabase {
     }
 
     @Implementation
-    suspend fun <T> execute(request: GetRequest<T>): T {
+    suspend fun <T> execute(request: GetRequest<T>): Result<T> {
         println("Make test request")
         return databaseHelper.use {request.run(scope = it.getWritableDB())  }
     }

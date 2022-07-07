@@ -18,7 +18,7 @@ class GetSmallPosterById(private val params: Bundle) : GetRequest<Bitmap>() {
         get() = params.getString(CONTENT_ID, "")
 
 
-    override suspend fun SQLiteDatabase.runRequest(): Bitmap  {
+    override suspend fun SQLiteDatabase.runRequest(): Result<Bitmap> {
         val key = portersTable.key
         val table = portersTable.tableName()
         val field = portersTable.Image.name

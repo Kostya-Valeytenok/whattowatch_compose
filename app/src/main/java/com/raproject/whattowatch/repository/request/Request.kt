@@ -12,10 +12,12 @@ open class Request {
     protected val genresTable = DBTable.GenresTable
     protected val portersTable = DBTable.Posters
 
-    protected suspend fun <T> SQLiteDatabase.safeGetRequest(@Language("SQL") sqlCommand: String, action: suspend Cursor.() -> T): T {
-        return rawQuery(sqlCommand, null).use {
-            it.moveToFirst()
-            action.invoke(it)
+    protected suspend fun <T> SQLiteDatabase.safeGetRequest(@Language("SQL") sqlCommand: String, action: suspend Cursor.() -> T): Result<T> {
+        return runCatching {
+            rawQuery(sqlCommand, null).use {
+                it.moveToFirst()
+                action.invoke(it)
+            }
         }
     }
 

@@ -14,16 +14,21 @@ import org.koin.core.component.inject
 import com.raproject.whattowatch.utils.Settings.localization
 import com.raproject.whattowatch.utils.Settings.orderType
 import com.raproject.whattowatch.utils.Settings.orderedRow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 class ContentProvider : KoinComponent {
 
     var loadingStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val errorFlow = MutableSharedFlow<Throwable>(extraBufferCapacity = 1)
 
     private val getMoviesUseCase: GetMoviesUseCase by inject()
     private val getTVShowsUseCase: GetTVShowsUseCase by inject()
     private val getCartoonsUseCase: GetCartoonsUseCase by inject()
     private val getAmineUseCase : GetAmineUseCase by inject()
     private val getTop100UseCase: GetTop100UseCase by inject()
+
+    private var contentItemsCache = listOf<ContentItem>()
+    private var screenCache:DrawerScreen? = null
 
     suspend fun getScreenContent(
         screen: MutableStateFlow<DrawerScreen>
@@ -32,20 +37,28 @@ class ContentProvider : KoinComponent {
             type, localization, orderType, orderedRow, ->
 
             val getContentModel = GetContentModel(localization, orderType.by(orderedRow))
-            return@combine when (type) {
+            when (type) {
                 DrawerScreen.Anime -> getContent { getAmineUseCase.invoke(getContentModel).await() }
                 DrawerScreen.Cartoons -> getContent { getCartoonsUseCase.invoke(getContentModel).await() }
                 DrawerScreen.Movies -> getContent { getMoviesUseCase.invoke(getContentModel).await() }
                 DrawerScreen.Serials -> getContent { getTVShowsUseCase.invoke(getContentModel).await() }
                 DrawerScreen.Top100 -> getContent { getTop100UseCase.invoke(getContentModel).await() }
-                DrawerScreen.WantToWatch -> listOf()
-                DrawerScreen.Watched -> listOf()
+                DrawerScreen.WantToWatch -> Result.success(listOf())
+                DrawerScreen.Watched -> Result.success(listOf())
+            }.onSuccess {
+                contentItemsCache = it
+                screenCache = type
+            }.onFailure {
+                errorFlow.emit(it)
+                if(screenCache != type) return@combine listOf()
             }
+
+            contentItemsCache
         }
     }
 
-    private suspend fun getContent(contentRequest: suspend () -> List<ContentItem>):
-        List<ContentItem> {
+    private suspend fun getContent(contentRequest: suspend () -> Result<List<ContentItem>>):
+        Result<List<ContentItem>> {
         loadingStatus.emit(true)
         val content = contentRequest.invoke()
         loadingStatus.emit(false)

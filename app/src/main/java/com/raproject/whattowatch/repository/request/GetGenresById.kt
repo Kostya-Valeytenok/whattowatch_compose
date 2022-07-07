@@ -20,15 +20,15 @@ class GetGenresById(params: Bundle) : GetRequest<String>() {
 
     private val localization: Localization = params.getSerializable(LOCALIZATION_KEY) as Localization
 
-    override suspend fun SQLiteDatabase.runRequest(): String  {
-        return  getGenres()
+    override suspend fun SQLiteDatabase.runRequest(): Result<String> {
+        return getGenres()
     }
 
-    private suspend fun SQLiteDatabase.getGenres():String{
+    private suspend fun SQLiteDatabase.getGenres(): Result<String> = runCatching {
         val generesDBTable = genresTable.tableName(localization)
         val key = genresTable.key
 
-        return safeGetRequest(
+        safeGetRequest(
             sqlCommand = "select * from $generesDBTable WHERE $key = $contentId"
         ) {
             var genesTemp = ""
@@ -38,6 +38,6 @@ class GetGenresById(params: Bundle) : GetRequest<String>() {
                 }
             }
             genesTemp
-        }
+        }.getOrThrow()
     }
 }

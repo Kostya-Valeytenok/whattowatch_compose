@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 
 data class ContentItem(
     var key: Int,
-    var image: Bitmap,
+    var image: Bitmap?,
     var name: String,
     var year: String,
     var genres: String,
