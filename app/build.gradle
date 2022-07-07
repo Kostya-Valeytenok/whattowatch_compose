@@ -42,6 +42,7 @@ android {
         freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.DelicateCoroutinesApi"
         freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
         freeCompilerArgs+="-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalCoroutinesApi"
     }
 
     buildFeatures {

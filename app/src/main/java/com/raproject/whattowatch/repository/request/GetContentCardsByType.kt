@@ -40,15 +40,15 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
     private val localization: Localization by lazy { params.getSerializable(LOCALIZATION_KEY) as Localization }
     private val orderCommand: String by lazy { params.getString(ORDER_COMMAND, "") }
 
-    override suspend fun SQLiteDatabase.runRequest(): Result<List<ContentItem>> {
+    override suspend fun SQLiteDatabase.runRequest(): Result<List<ContentItem>> = runCatching {
         val contentTable = mainTable.tableName(localization)
         val key = DBTable.MainTable.key
 
         val cardContentFields = contentType.getCardContentFields()
 
-        return safeGetRequest(sqlCommand = "select $cardContentFields from $contentTable where $key in (${getSource()})$orderCommand"){
+        safeGetRequest(sqlCommand = "select $cardContentFields from $contentTable where $key in (${getSource()})$orderCommand"){
             prepareContentItemList(this@runRequest)
-        }
+        }.getOrThrow()
     }
 
     private fun ContentType.getCardContentFields(): String {
