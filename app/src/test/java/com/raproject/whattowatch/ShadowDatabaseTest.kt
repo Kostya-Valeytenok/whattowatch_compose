@@ -15,12 +15,28 @@ class ShadowDatabaseTest {
     @Test
     fun dbInit() {
 
+        val mainTableColumns ="contentId, image, title, year, country, duration, devRating, kinopoiskRating, director, cast, description"
+        val postersColumns ="contentId, image"
+        val genresColumns ="contentId, Biograph, Action, Western, Military, Detctive, Document, Drama, Historical, Comedy, Crime, Melodrama, Musical, Adventure, Family, Sport, Thriller, Horror, Fantastic, Fantasy"
+
         fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from MainTable", null).use {
-            assertEquals("contentId, image, title, year, country, duration, devRating, kinopoiskRating, director, cast, description", it.columnNames.joinToString())
+            assertEquals(mainTableColumns, it.columnNames.joinToString())
         }
 
         fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from MainTableEN", null).use {
-            assertEquals("contentId, image, title, year, country, duration, devRating, kinopoiskRating, director, cast, description", it.columnNames.joinToString())
+            assertEquals(mainTableColumns, it.columnNames.joinToString())
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from Posters", null).use {
+            assertEquals(postersColumns, it.columnNames.joinToString())
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from GenresKeysEN", null).use {
+            assertEquals(genresColumns, it.columnNames.joinToString())
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from GenresKeys", null).use {
+            assertEquals(genresColumns, it.columnNames.joinToString())
         }
     }
 
@@ -31,6 +47,18 @@ class ShadowDatabaseTest {
         }
 
         fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from MainTableEN", null).use {
+            assertEquals(3,it.count)
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from Posters", null).use {
+            assertEquals(3,it.count)
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from GenresKeysEN", null).use {
+            assertEquals(3,it.count)
+        }
+
+        fakeDatabase.databaseHelper.writableDatabase.rawQuery("select * from GenresKeys", null).use {
             assertEquals(3,it.count)
         }
     }

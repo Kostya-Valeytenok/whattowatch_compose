@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import androidx.annotation.DrawableRes
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.repository.getWritableDB
 import com.raproject.whattowatch.repository.request.GetRequest
@@ -13,6 +16,7 @@ import com.raproject.whattowatch.utils.Localization
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
+import java.io.ByteArrayOutputStream
 
 
 @Implements(DataBase::class)
@@ -31,6 +35,7 @@ class ShadowDatabase {
         override fun onCreate(db: SQLiteDatabase) {
             db.createMainTable()
             db.createGenresTable()
+            db.createPostersTable()
         }
 
         private fun SQLiteDatabase.createMainTable(){
@@ -298,6 +303,30 @@ class ShadowDatabase {
             genres.put("Fantasy",fantasy)
 
             insert(genresTable.tableName(locale = localization), null, genres)
+        }
+
+        private fun SQLiteDatabase.createPostersTable(){
+            execSQL("CREATE TABLE \"Posters\" (\n" +
+                    "\t\"contentId\"\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
+                    "\t\"image\"\tBLOB);")
+            inputTestDataIntoPostersTable()
+        }
+
+        private fun SQLiteDatabase.inputTestDataIntoPostersTable(){
+            addImage(id = 1)
+            addImage(id = 2)
+            addImage(id = 3)
+        }
+
+        private fun  SQLiteDatabase.addImage(id:Int, @DrawableRes imageId:Int = R.drawable.t_image){
+            val poster = ContentValues()
+            val image = (context.getDrawable(imageId) as BitmapDrawable).bitmap
+            val stream = ByteArrayOutputStream()
+            image.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            val imageData: ByteArray = stream.toByteArray()
+            poster.put("contentId",id)
+            poster.put("image", imageData)
+            insert("Posters",null,poster)
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
