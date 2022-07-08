@@ -11,17 +11,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Whattowatch">
         <activity
+            android:name=".AboutContentActivity"
+            android:exported="false"
+            android:label="@string/title_activity_about_content"
+            android:theme="@style/Theme.Whattowatch" />
+        <activity
             android:name=".ui.content_list.AppActivity"
             android:exported="true"
             android:label=""
-            android:theme="@style/Theme.Whattowatch.NoActionBar" >
-            
+            android:theme="@style/Theme.Whattowatch.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

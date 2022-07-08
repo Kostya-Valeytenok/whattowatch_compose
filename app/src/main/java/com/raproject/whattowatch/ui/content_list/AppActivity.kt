@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
-import com.raproject.whattowatch.ui.theme.WhattowatchTheme
+import com.raproject.whattowatch.ui.about_content.ui.theme.WhattowatchTheme
 
 class AppActivity : ComponentActivity() {
 
