@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.test_database
+package com.raproject.whattowatch.test_database_builder
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.DrawableRes
 import com.raproject.whattowatch.R
-import com.raproject.whattowatch.utils.Localization
 import org.robolectric.RuntimeEnvironment
 import java.io.ByteArrayOutputStream
 

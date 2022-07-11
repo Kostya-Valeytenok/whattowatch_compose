@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.test_database
+package com.raproject.whattowatch.test_database_builder
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase

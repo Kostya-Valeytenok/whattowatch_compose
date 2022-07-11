@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.test_database
+package com.raproject.whattowatch.test_database_builder
 
 import android.database.sqlite.SQLiteDatabase
 import com.raproject.whattowatch.utils.DBTable
