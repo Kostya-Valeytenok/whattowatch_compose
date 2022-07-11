@@ -3,6 +3,7 @@ package com.raproject.whattowatch.ui
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import com.raproject.whattowatch.models.ContentItem
 
@@ -48,7 +49,7 @@ private fun ScreenBase(
             )
         },
         frontLayerContent = { screen() },
-        backLayerBackgroundColor = MaterialTheme.colors.primaryVariant
+        backLayerBackgroundColor =  MaterialTheme.colorScheme.tertiary
     )
 }
 

@@ -1,4 +1,4 @@
-package com.raproject.whattowatch.ui.about_content.ui.theme
+package com.raproject.whattowatch.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
