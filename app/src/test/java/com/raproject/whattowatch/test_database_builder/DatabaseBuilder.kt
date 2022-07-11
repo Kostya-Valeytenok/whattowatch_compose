@@ -9,5 +9,8 @@ object DatabaseBuilder {
         BuildGenresTableTask.run { this@build.runTask() }
         BuildPostersTableTask.run { this@build.runTask() }
         BuildMoviesTableTask.run { this@build.runTask() }
+        BuildAnimeTableTask.run { this@build.runTask() }
+        BuildTVShowsTableTask.run { this@build.runTask() }
+        BuildCartoonsTableTask.run { this@build.runTask() }
     }
 }
