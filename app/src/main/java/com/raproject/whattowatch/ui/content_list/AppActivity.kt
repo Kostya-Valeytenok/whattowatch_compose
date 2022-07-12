@@ -10,24 +10,35 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
+import com.raproject.whattowatch.ui.about_content.AboutContentActivity
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
 
 class AppActivity : ComponentActivity() {
 
     private val vm: AppActivityViewModel by viewModels()
 
+    private val openAboutContentScreenAction: (String) ->Unit ={
+        println("Invoke")
+        startActivity(AboutContentActivity.getLaunchIntent(this, contentId = it))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val navigationAction: suspend (DrawerScreen) -> Unit = { vm.setScreenType(it) }
         DrawerScreen.screens
+
+        val navigationAction: suspend (DrawerScreen) -> Unit = { vm.setScreenType(it) }
+        val openAboutContentScreenAction: (String) ->Unit ={
+            println("Invoke")
+            startActivity(AboutContentActivity.getLaunchIntent(this, contentId = it))
+        }
         setContent {
             WhattowatchTheme {
 
                 val content = vm.content.collectAsState().value
                 val loadingVisibility = vm.loadingStatus.collectAsState().value
                 val type = vm.screenTypeState.collectAsState().value
-                ContentScreen(content, loadingVisibility, type, navigationAction)
+                ContentScreen(content, loadingVisibility, type, navigationAction, openAboutContentScreenAction)
             }
         }
     }

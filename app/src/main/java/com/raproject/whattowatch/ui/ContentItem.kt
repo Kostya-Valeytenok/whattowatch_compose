@@ -20,10 +20,9 @@ import com.raproject.whattowatch.models.ContentItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
+fun ContentCard(content: ContentItem, ratingNumber: Int? = null, openAboutContentScreenAction: (String) -> Unit = {}) {
     Card(
-        onClick = {
-        },
+        onClick = { openAboutContentScreenAction.invoke(content.key.toString()) },
         elevation = 4.dp,
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp)
@@ -104,7 +103,7 @@ fun CardPreview() {
             image = Bitmap.createBitmap(5, 5, Bitmap.Config.RGB_565),
             name = "Test name",
             genres = "test",
-            year = "2021"
+            year = "2021",
         )
     )
 }

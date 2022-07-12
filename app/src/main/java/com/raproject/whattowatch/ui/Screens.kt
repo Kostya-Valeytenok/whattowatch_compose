@@ -13,11 +13,12 @@ fun ContentScreen(
     titlesList: List<ContentItem>,
     loadingVisibility: Boolean,
     type: DrawerScreen,
-    navigationAction: suspend (DrawerScreen) -> Unit
+    navigationAction: suspend (DrawerScreen) -> Unit,
+    openAboutContentScreenAction: (String) -> Unit
 ) {
 
     ScreenBase(type, loadingVisibility, navigationAction) {
-        ContentView(series = titlesList, loadingVisibility)
+        ContentView(series = titlesList, loadingVisibility, openAboutContentScreenAction)
     }
 }
 
@@ -58,8 +59,9 @@ private fun ScreenBase(
 private fun ContentView(
     series: List<ContentItem>,
     loadingVisibility: Boolean,
+    openAboutContentScreenAction: (String) -> Unit,
 ) {
     Column {
-        ItemsList(ui_items = series, loadingVisibility)
+        ItemsList(ui_items = series, loadingVisibility, openAboutContentScreenAction)
     }
 }

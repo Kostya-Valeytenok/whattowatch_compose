@@ -13,7 +13,11 @@ import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.models.ContentItem
 
 @Composable
-fun ItemsList(ui_items: List<ContentItem>, loadingVisibility: Boolean) {
+fun ItemsList(
+    ui_items: List<ContentItem>,
+    loadingVisibility: Boolean,
+    openAboutContentScreenAction: (String) -> Unit
+) {
 
     val rotationAngle by animateFloatAsState(
         targetValue = if (!loadingVisibility) 1f else 0f,
@@ -25,7 +29,7 @@ fun ItemsList(ui_items: List<ContentItem>, loadingVisibility: Boolean) {
         modifier = Modifier.alpha(rotationAngle)
     ) {
         itemsIndexed(ui_items) { index, item ->
-            ContentCard(content = item, ratingNumber = index + 1)
+            ContentCard(content = item, ratingNumber = index + 1,openAboutContentScreenAction= openAboutContentScreenAction)
         }
     }
 }
