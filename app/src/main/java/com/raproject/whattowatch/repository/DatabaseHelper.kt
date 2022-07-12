@@ -44,8 +44,8 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     }
 
     private fun SQLiteDatabase.getOldUserData(): OldUserData {
-        val wantToWatchCursor = rawQuery("select _Key from Wanttowatch", null)
-        val sawCursor = rawQuery("select _Key from Saw", null)
+        val wantToWatchCursor = rawQuery("select * from Wanttowatch", null)
+        val sawCursor = rawQuery("select * from Saw", null)
         wantToWatchCursor.moveToFirst()
         sawCursor.moveToFirst()
         close()

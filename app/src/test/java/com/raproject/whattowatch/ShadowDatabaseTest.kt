@@ -5,6 +5,7 @@ import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.GlobalContext
+import org.koin.core.context.stopKoin
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 
@@ -94,6 +95,6 @@ class ShadowDatabaseTest {
 
     @After
     fun tearDown() {
-        GlobalContext.stopKoin()
+        stopKoin()
     }
 }

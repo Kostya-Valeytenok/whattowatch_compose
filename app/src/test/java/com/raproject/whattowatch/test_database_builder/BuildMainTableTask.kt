@@ -54,7 +54,7 @@ object BuildMainTableTask : DatabaseBuildTask() {
         addContent(
             id = 2,
             posterURL = "films/1B.jpg",
-            title = "Interstellar",
+            title = "Интерстеллар",
             year = "2014",
             country = "США, Великобритания, Канада",
             duration = "2 ч 49 мин",

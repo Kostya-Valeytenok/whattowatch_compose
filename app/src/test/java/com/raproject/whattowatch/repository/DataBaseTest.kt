@@ -5,8 +5,10 @@ import com.raproject.whattowatch.genresColumns
 import com.raproject.whattowatch.mainTableColumns
 import com.raproject.whattowatch.postersColumns
 import com.raproject.whattowatch.utils.ContentType
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.GlobalContext
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.robolectric.RobolectricTestRunner
@@ -54,5 +56,10 @@ class DataBaseTest : KoinTest {
         fakeDatabase.writableDatabase.rawQuery("select * from ${ContentType.Anime.tableName}", null).use {
             assertEquals(contentColumns, it.columnNames.joinToString())
         }
+    }
+
+    @After
+    fun tearDown() {
+        GlobalContext.stopKoin()
     }
 }
