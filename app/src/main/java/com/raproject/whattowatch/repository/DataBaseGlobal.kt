@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.raproject.whattowatch.repository.request.GetRequest
 
-const val DB_VERSION = 117
+const val DB_VERSION = 118
 
 fun SQLiteOpenHelper.completeForWritable(
     onFailed: (Throwable) -> Unit = {},
@@ -26,6 +26,6 @@ fun SQLiteOpenHelper.getWritableDB(): SQLiteDatabase {
     return dataBase
 }
 
-suspend fun <T> GetRequest<T>.run(scope:SQLiteDatabase) : T{
+suspend fun <T> GetRequest<T>.run(scope:SQLiteDatabase) : Result<T> {
    return scope.runRequest()
 }

@@ -40,15 +40,15 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
     private val localization: Localization by lazy { params.getSerializable(LOCALIZATION_KEY) as Localization }
     private val orderCommand: String by lazy { params.getString(ORDER_COMMAND, "") }
 
-    override suspend fun SQLiteDatabase.runRequest(): List<ContentItem> {
+    override suspend fun SQLiteDatabase.runRequest(): Result<List<ContentItem>> = runCatching {
         val contentTable = mainTable.tableName(localization)
         val key = DBTable.MainTable.key
 
         val cardContentFields = contentType.getCardContentFields()
 
-        return safeGetRequest(sqlCommand = "select $cardContentFields from $contentTable where $key in (${getSource()})$orderCommand"){
+        safeGetRequest(sqlCommand = "select $cardContentFields from $contentTable where $key in (${getSource()})$orderCommand"){
             prepareContentItemList(this@runRequest)
-        }
+        }.getOrThrow()
     }
 
     private fun ContentType.getCardContentFields(): String {
@@ -57,11 +57,15 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
     }
 
     private suspend fun SQLiteDatabase.getSource():String{
-        return if (contentType == ContentType.Top100) getTop100ByDevRating()
-        else command("select * from ${contentType.tableName}")
+        var source = command("select * from ${contentType.tableName}")
+
+        if (contentType == ContentType.Top100){
+            getTop100ByDevRating().onSuccess { source = it }
+        }
+        return source
     }
 
-    private suspend fun SQLiteDatabase.getTop100ByDevRating():String{
+    private suspend fun SQLiteDatabase.getTop100ByDevRating(): Result<String> {
         val getTop100Request:GetTop100 by inject {
             parametersOf(GetTop100.createParams(
                 localization = localization,
@@ -108,7 +112,7 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
         rating: String? = null
     ): Deferred<ContentItem> = asyncJob {
         val genes: String
-        val poster: Bitmap
+        val poster: Bitmap?
         val genresTask = asyncJob { getGenresById(contentId) }
         val porterTask = asyncJob { posterById(contentId) }
         genes = genresTask.await()
@@ -120,7 +124,7 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
         id: String,
         title: String,
         titleReleaseYear: String,
-        poster: Bitmap,
+        poster: Bitmap?,
         genes: String,
         rating: String? = null
     ): ContentItem {
@@ -134,21 +138,21 @@ class GetContentCardsByType(private val params: Bundle) : GetRequest<List<Conten
         )
     }
 
-    private suspend fun SQLiteDatabase.getGenresById(contentId:String):String{
+    private suspend fun SQLiteDatabase.getGenresById(contentId:String): String {
         val getGenresByIdRequest:GetGenresById by inject {
             parametersOf(GetGenresById.createParams(
                 contentId= contentId,
                 localization = localization
             ))
         }
-        return getGenresByIdRequest.run(scope = this)
+        return getGenresByIdRequest.run(scope = this).getOrNull()?:""
     }
 
-    private suspend fun SQLiteDatabase.posterById(contentId:String): Bitmap {
+    private suspend fun SQLiteDatabase.posterById(contentId:String): Bitmap? {
         val getPosterByIdRequest:GetSmallPosterById by inject {
             parametersOf(GetSmallPosterById.createParams(contentId= contentId))
         }
-        return getPosterByIdRequest.run(scope = this)
+        return getPosterByIdRequest.run(scope = this).getOrNull()
     }
 
 }

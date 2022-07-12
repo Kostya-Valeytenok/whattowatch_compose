@@ -3,10 +3,12 @@ package com.raproject.whattowatch.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.* // ktlint-disable no-wildcard-imports
+import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -17,6 +19,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.raproject.whattowatch.ui.theme.TextColor
 import com.raproject.whattowatch.ui.theme.White
 import com.raproject.whattowatch.utils.forEachIndexedWithLastMarker
 import kotlinx.coroutines.Dispatchers
@@ -96,12 +99,13 @@ private fun MenuItemContent(screen: DrawerScreen) {
                 top = 8.dp,
                 bottom = 8.dp
             ),
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+            colorFilter = ColorFilter.tint(TextColor.value)
         )
         Text(
             text = screen.title,
-            style = MaterialTheme.typography.h4,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 14.sp,
+            color = TextColor.value
         )
     }
 }

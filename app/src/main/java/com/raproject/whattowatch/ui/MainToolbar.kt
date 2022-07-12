@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import com.raproject.whattowatch.ui.theme.TextColor
 import com.raproject.whattowatch.utils.Localization
 import com.raproject.whattowatch.utils.Settings
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +35,7 @@ fun MainScreenToolbar(
 ) {
     val scope = rememberCoroutineScope()
     TopAppBar(
-        title = { Text(screenType.title) },
+        title = { Text(screenType.title, color = TextColor.value) },
         navigationIcon = {
             NavigationIconWithAnimation(
                 scaffoldState = scaffoldState,
@@ -98,7 +99,8 @@ private fun NavigationIcon(
             modifier = Modifier.graphicsLayer(
                 rotationX = xRotation,
                 rotationY = yRotation,
-            )
+            ),
+            tint = TextColor.value
         )
     }
 }
@@ -122,7 +124,8 @@ private fun UploadingIndicator(visibility: Boolean) {
             contentDescription = "Loading...",
             modifier = Modifier
                 .padding(end = 4.dp)
-                .rotate(rotation.value)
+                .rotate(rotation.value),
+            tint = TextColor.value
         )
     }
 }
@@ -136,8 +139,8 @@ private fun SettingsIcon(scope: CoroutineScope) {
                     Settings.setLocale(Localization.Russian)
                 else Settings.setLocale(Localization.English)
             }
-        }
+        },
     ) {
-        Icon(Icons.Default.Settings, contentDescription = "Settings")
+        Icon(Icons.Default.Settings, contentDescription = "Settings",  tint = TextColor.value)
     }
 }

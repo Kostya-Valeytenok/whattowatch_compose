@@ -9,19 +9,20 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.raproject.whattowatch.models.ContentItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
+fun ContentCard(content: ContentItem, ratingNumber: Int? = null, openAboutContentScreenAction: (String) -> Unit = {}) {
     Card(
-        onClick = {
-        },
+        onClick = { openAboutContentScreenAction.invoke(content.key.toString()) },
         elevation = 4.dp,
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp)
@@ -41,7 +42,7 @@ fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
             ) {
                 Image(
                     contentDescription = "Poster",
-                    bitmap = content.image.asImageBitmap(),
+                    bitmap = content.image?.asImageBitmap()?: ImageBitmap(60,80),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -57,7 +58,8 @@ fun ContentCard(content: ContentItem, ratingNumber: Int? = null) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 17.sp
                 )
                 Text(
                     text = content.year,
@@ -101,7 +103,7 @@ fun CardPreview() {
             image = Bitmap.createBitmap(5, 5, Bitmap.Config.RGB_565),
             name = "Test name",
             genres = "test",
-            year = "2021"
+            year = "2021",
         )
     )
 }

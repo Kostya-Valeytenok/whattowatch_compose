@@ -19,7 +19,7 @@ class DataBase() : KoinComponent {
 
     private val mutex = Mutex()
 
-    suspend fun <T> execute(request: GetRequest<T>): T {
+    suspend fun <T> execute(request: GetRequest<T>): Result<T> {
         return mutex.useDataBase { request.run { runRequest() } }
     }
 

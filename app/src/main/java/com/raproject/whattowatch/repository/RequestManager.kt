@@ -19,7 +19,7 @@ class RequestManager : KoinComponent {
         contentType: ContentType,
         localization: Localization,
         orderCommand: String
-    ): List<ContentItem> =
+    ): Result<List<ContentItem>> =
         createGetRequest<GetContentCardsByType>(
             GetContentCardsByType.createParams(
                 contentType = contentType,
@@ -28,7 +28,7 @@ class RequestManager : KoinComponent {
             )
         ).execute()
 
-    private suspend fun <T> GetRequest<T>.execute(): T {
+    private suspend fun <T> GetRequest<T>.execute(): Result<T> {
         return dataBase.execute(this)
     }
 

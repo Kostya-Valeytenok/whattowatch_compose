@@ -2,6 +2,7 @@
 
 package com.raproject.whattowatch.repository.request
 
+import androidx.core.os.bundleOf
 import com.raproject.whattowatch.ShadowDatabase
 import com.raproject.whattowatch.repository.DataBase
 import com.raproject.whattowatch.utils.DBTable
@@ -43,7 +44,19 @@ class GetTop100Test : KoinTest {
 
         runCurrent()
 
-        assertEquals("3, 1, 2",task.await())
+        assertEquals("3, 1, 2",task.await().getOrThrow())
+    }
+
+    @Test
+    fun`runRequest() with error`() = runTest {
+
+        val request = get<GetTop100>{ parametersOf(bundleOf()) }
+
+        val  task = async {  db.execute(request) }
+
+        runCurrent()
+
+        assertEquals(null,task.await().getOrNull())
     }
 
     @Test
@@ -61,7 +74,7 @@ class GetTop100Test : KoinTest {
 
         runCurrent()
 
-        assertEquals("1, 2, 3",task.await())
+        assertEquals("1, 2, 3",task.await().getOrThrow())
     }
 
     @Test
@@ -78,7 +91,7 @@ class GetTop100Test : KoinTest {
 
         runCurrent()
 
-        assertEquals("3, 1, 2",task.await())
+        assertEquals("3, 1, 2",task.await().getOrThrow())
     }
 
     @Test
@@ -95,7 +108,7 @@ class GetTop100Test : KoinTest {
 
         runCurrent()
 
-        assertEquals("1, 2, 3",task.await())
+        assertEquals("1, 2, 3",task.await().getOrThrow())
     }
 
     @After
