@@ -28,10 +28,6 @@ class AppActivity : ComponentActivity() {
         DrawerScreen.screens
 
         val navigationAction: suspend (DrawerScreen) -> Unit = { vm.setScreenType(it) }
-        val openAboutContentScreenAction: (String) ->Unit ={
-            println("Invoke")
-            startActivity(AboutContentActivity.getLaunchIntent(this, contentId = it))
-        }
         setContent {
             WhattowatchTheme {
 

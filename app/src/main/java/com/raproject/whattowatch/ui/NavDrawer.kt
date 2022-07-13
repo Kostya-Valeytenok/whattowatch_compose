@@ -41,6 +41,8 @@ fun MenuView(
 ) {
     val scope = rememberCoroutineScope()
 
+    Spacer(modifier = Modifier.height(10.dp))
+
     DrawerScreen.screens.forEachIndexedWithLastMarker { index, screen, isLast ->
         val onClick = {
             scope.launch(Dispatchers.Default) {

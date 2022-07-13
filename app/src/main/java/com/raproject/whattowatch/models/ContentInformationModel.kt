@@ -5,5 +5,6 @@ data class ContentInformationModel(
     val title:String,
     var genres: String,
     val year: String,
-    val duration:String
+    val duration:String,
+    val isInFavorite:Boolean
 )

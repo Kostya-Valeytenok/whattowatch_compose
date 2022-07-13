@@ -21,3 +21,5 @@ var White = Color(0xFFFFFFFF)
 var DarkWhite = Color(0xFFB3B3B3)
 var Black = Color(0xFF000000)
 var LightGreen = Color(0xFF02F11A)
+
+val LikeColor = Color(0xFFFF6B71)
