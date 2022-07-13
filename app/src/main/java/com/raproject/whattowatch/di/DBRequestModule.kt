@@ -10,4 +10,5 @@ val dbRequestsModule = module {
     factory { (params: Bundle) -> GetTop100(params =params) }
     factory { (params: Bundle) -> GetContentCardsByType(params =params) }
     factory { (id:String) -> PostContentIntoFavorite(contentId = id) }
+    factory { (params:Bundle)-> GetIsInFavoriteStatus(params = params) }
 }

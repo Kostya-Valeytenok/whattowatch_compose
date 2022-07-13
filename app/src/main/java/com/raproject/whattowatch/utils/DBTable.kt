@@ -19,6 +19,7 @@ sealed class DBTable {
             TVShows -> "Series"
             Posters -> "Posters"
             Cartoons -> "Cartoons"
+            Favorite -> "Wanttowatch"
         }
     }
 
@@ -73,5 +74,10 @@ sealed class DBTable {
             get() = "contentId"
 
         val Image = TableRow("image")
+    }
+
+    object Favorite : DBTable() {
+        override val key: String
+            get() = "contentId"
     }
 }

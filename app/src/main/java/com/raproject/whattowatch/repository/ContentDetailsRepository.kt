@@ -5,4 +5,8 @@ class ContentDetailsRepository(private val requestManager: RequestManager) : Rep
     suspend fun addContentToFavorite(contentId:String) = runRequest{
         requestManager.postToFavorite(contentId)
     }
+
+    suspend fun getIsInFavoriteStatus(contentId: String) = runRequest {
+        requestManager.getIsInFavoriteStatus(contentId)
+    }
 }

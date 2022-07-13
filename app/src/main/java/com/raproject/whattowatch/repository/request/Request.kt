@@ -11,6 +11,7 @@ open class Request {
     protected val mainTable = DBTable.MainTable
     protected val genresTable = DBTable.GenresTable
     protected val portersTable = DBTable.Posters
+    protected val favoriteTable = DBTable.Favorite
 
     protected suspend fun <T> SQLiteDatabase.safeGetRequest(@Language("SQL") sqlCommand: String, action: suspend Cursor.() -> T): Result<T> {
         return runCatching {

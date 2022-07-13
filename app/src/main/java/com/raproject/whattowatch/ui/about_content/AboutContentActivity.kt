@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.raproject.whattowatch.models.ContentDetailsStatus
@@ -18,6 +19,7 @@ import com.raproject.whattowatch.repository.fakeImageURL
 import com.raproject.whattowatch.ui.ContentInformationScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
 import com.raproject.whattowatch.utils.DoubleClickChecker
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class AboutContentActivity : ComponentActivity() {
 
@@ -42,13 +44,17 @@ class AboutContentActivity : ComponentActivity() {
     private val goBackAction: () -> Unit = { if (isNotDoubleClick) finish() }
 
     private val manageFavoriteStatus: ((Throwable)->Unit) -> Unit = {
+        println("Click")
         viewModel.manageFavoriteStatus(onErrorAction = it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.init(contentId = intent.getStringExtra(KEY_CONTENT_ID)?:"")
         setContent {
             WhattowatchTheme {
+
+                val isInFavoriteState = viewModel.isInFavoriteState.collectAsState().value
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -64,7 +70,8 @@ class AboutContentActivity : ComponentActivity() {
                             duration = "108 min",
                             isInFavorite = true),
                         onBackClickAction = goBackAction,
-                        manageLikeStatusAction = manageFavoriteStatus
+                        manageLikeStatusAction = manageFavoriteStatus,
+                        isInFavoriteState = isInFavoriteState
                     )
                 }
             }
@@ -89,6 +96,7 @@ fun DefaultPreview2() {
             genres = "Action, Detective, Drama, Thriller, Fantastic",
             duration = "108 min",
             isInFavorite = true
-        )
+        ),
+        isInFavoriteState = false
     )
 }

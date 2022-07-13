@@ -10,9 +10,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,10 +28,10 @@ import com.raproject.whattowatch.utils.PosterShape
 @Composable
 fun ContentInformationScreen(
     model: ContentDetailsStatus.ContentInformationModel,
+    isInFavoriteState: Boolean,
     onBackClickAction:()-> Unit = {},
     manageLikeStatusAction: ((Throwable) -> Unit) -> Unit = {}) {
     Column {
-        val isInFavoriteState = remember { mutableStateOf(model.isInFavorite) }
         val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
 
         BackdropScaffold(
@@ -83,13 +81,17 @@ private fun BoxScope.GoBackIcon(goBackAction:()->Unit){
 }
 
 @Composable
-private fun BoxScope.LikeIconButton(onClickAction: ((Throwable) -> Unit) -> Unit, isInFavorite:State<Boolean>){
+private fun BoxScope.LikeIconButton(onClickAction: ((Throwable) -> Unit) -> Unit, isInFavorite: Boolean){
+
     IconButton(
-        onClick = { onClickAction.invoke({error -> }) }, modifier = Modifier
+        onClick = {
+            println("FFF")
+            onClickAction.invoke({error -> })
+                  }, modifier = Modifier
             .align(Alignment.BottomCenter)
     ) {
         Icon(
-            imageVector = if (isInFavorite.value) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+            imageVector = if (isInFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
             contentDescription = "Like Status",
             modifier = Modifier
                 .padding(bottom = 8.dp)
