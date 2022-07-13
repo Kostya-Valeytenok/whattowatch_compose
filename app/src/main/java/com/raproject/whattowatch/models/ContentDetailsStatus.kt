@@ -7,6 +7,7 @@ sealed class ContentDetailsStatus{
     object onLoading : ContentDetailsStatus()
 
     data class ContentInformationModel(
+        val id:String,
         val posterUrl:String,
         val title:String,
         var genres: String,

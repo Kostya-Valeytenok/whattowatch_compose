@@ -9,4 +9,5 @@ val useCasesModel = module {
     single { GetMoviesUseCase(get()) }
     single { GetTVShowsUseCase(get()) }
     single { GetAmineUseCase(get()) }
+    single { AddContentToFavoriteUseCase(get()) }
 }

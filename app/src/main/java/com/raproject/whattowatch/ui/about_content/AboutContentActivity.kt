@@ -33,13 +33,16 @@ class AboutContentActivity : ComponentActivity() {
     }
 
     private val doubleClickVerification = DoubleClickChecker()
+
+    private val isNotDoubleClick :Boolean
+        get() = doubleClickVerification.isDoubleClicked.not()
+
     private val viewModel: AboutContentViewModel by viewModels()
 
-    private val goBackAction: () -> Unit =
-        { if (doubleClickVerification.isDoubleClicked.not()) finish() }
+    private val goBackAction: () -> Unit = { if (isNotDoubleClick) finish() }
 
-    private val manageFavoriteStatus: () -> Unit = {
-
+    private val manageFavoriteStatus: ((Throwable)->Unit) -> Unit = {
+        viewModel.manageFavoriteStatus(onErrorAction = it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +56,15 @@ class AboutContentActivity : ComponentActivity() {
                 ) {
                     ContentInformationScreen(
                         model = ContentDetailsStatus.ContentInformationModel(
+                            id = "1",
                             posterUrl = fakeImageURL,
                             title = "Inception",
                             year = "2010",
                             genres = "Action, Detective, Drama, Thriller, Fantastic",
                             duration = "108 min",
                             isInFavorite = true),
-                        onBackClickAction = goBackAction
+                        onBackClickAction = goBackAction,
+                        manageLikeStatusAction = manageFavoriteStatus
                     )
                 }
             }
@@ -77,6 +82,7 @@ fun Greeting2(name: String) {
 fun DefaultPreview2() {
     ContentInformationScreen(
         model = ContentDetailsStatus.ContentInformationModel(
+            id = "1",
             posterUrl = fakeImageURL,
             title = "Inception",
             year = "2010",

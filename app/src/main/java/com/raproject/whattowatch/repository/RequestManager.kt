@@ -28,6 +28,9 @@ class RequestManager : KoinComponent {
             )
         ).execute()
 
+
+    suspend fun postToFavorite(contentId:String): Result<Unit> = createPostRequest(contentId).execute()
+
     private suspend fun <T> GetRequest<T>.execute(): Result<T> {
         return dataBase.execute(this)
     }

@@ -31,7 +31,7 @@ import com.raproject.whattowatch.utils.PosterShape
 fun ContentInformationScreen(
     model: ContentDetailsStatus.ContentInformationModel,
     onBackClickAction:()-> Unit = {},
-    manageLikeStatusAction:()->Unit = {}) {
+    manageLikeStatusAction: ((Throwable) -> Unit) -> Unit = {}) {
     Column {
         val isInFavoriteState = remember { mutableStateOf(model.isInFavorite) }
         val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
@@ -83,9 +83,9 @@ private fun BoxScope.GoBackIcon(goBackAction:()->Unit){
 }
 
 @Composable
-private fun BoxScope.LikeIconButton(onClickAction:()->Unit, isInFavorite:State<Boolean>){
+private fun BoxScope.LikeIconButton(onClickAction: ((Throwable) -> Unit) -> Unit, isInFavorite:State<Boolean>){
     IconButton(
-        onClick = { onClickAction.invoke() }, modifier = Modifier
+        onClick = { onClickAction.invoke({error -> }) }, modifier = Modifier
             .align(Alignment.BottomCenter)
     ) {
         Icon(
