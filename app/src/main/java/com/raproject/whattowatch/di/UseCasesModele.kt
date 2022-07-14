@@ -12,4 +12,5 @@ val useCasesModel = module {
     single { AddContentToFavoriteUseCase(get()) }
     single { DeleteContentFromFavoriteUseCase(get()) }
     single { GetIsInFavoriteStatusUseCase(get()) }
+    single { GetContentDetailsUseCase(get()) }
 }

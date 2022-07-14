@@ -14,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.raproject.whattowatch.models.ContentDetailsStatus
-import com.raproject.whattowatch.repository.fakeImageURL
+import com.raproject.whattowatch.models.ContentViewModel
 import com.raproject.whattowatch.ui.ContentInformationScreen
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
 import com.raproject.whattowatch.utils.DoubleClickChecker
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class AboutContentActivity : ComponentActivity() {
 
@@ -55,19 +53,14 @@ class AboutContentActivity : ComponentActivity() {
             WhattowatchTheme {
 
                 val isInFavoriteState = viewModel.isInFavoriteState.collectAsState().value
+                val contentViewModelState = viewModel.contentState.collectAsState().value
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ContentInformationScreen(
-                        model = ContentDetailsStatus.ContentInformationModel(
-                            id = "1",
-                            posterUrl = fakeImageURL,
-                            title = "Inception",
-                            year = "2010",
-                            genres = "Action, Detective, Drama, Thriller, Fantastic",
-                            duration = "108 min"),
+                        model = contentViewModelState,
                         onBackClickAction = goBackAction,
                         manageLikeStatusAction = manageFavoriteStatus,
                         isInFavoriteState = isInFavoriteState
@@ -87,14 +80,7 @@ fun Greeting2(name: String) {
 @Composable
 fun DefaultPreview2() {
     ContentInformationScreen(
-        model = ContentDetailsStatus.ContentInformationModel(
-            id = "1",
-            posterUrl = fakeImageURL,
-            title = "Inception",
-            year = "2010",
-            genres = "Action, Detective, Drama, Thriller, Fantastic",
-            duration = "108 min"
-        ),
+        model = ContentViewModel(),
         isInFavoriteState = false
     )
 }

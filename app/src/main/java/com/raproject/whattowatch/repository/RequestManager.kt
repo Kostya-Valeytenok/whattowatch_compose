@@ -1,6 +1,7 @@
 package com.raproject.whattowatch.repository
 
 import android.os.Bundle
+import com.raproject.whattowatch.models.ContentDetailsStatus
 import com.raproject.whattowatch.models.ContentItem
 import com.raproject.whattowatch.repository.request.*
 import com.raproject.whattowatch.utils.ContentType
@@ -32,6 +33,17 @@ class RequestManager : KoinComponent {
             )
         ).execute()
 
+    suspend fun getContentInfoById(
+        contentId: String,
+        localization: Localization
+    ): Result<ContentDetailsStatus> {
+        return createGetRequest<GetContentInfoById>(
+            GetContentInfoById.createParams(
+                contentId = contentId,
+                localization = localization
+            )
+        ).execute()
+    }
 
     suspend fun postToFavorite(contentId: String): Result<Unit> =
         createPostRequest<PostContentIntoFavorite, String>(contentId).execute()

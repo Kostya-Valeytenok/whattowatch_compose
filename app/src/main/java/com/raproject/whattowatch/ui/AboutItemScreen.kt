@@ -1,5 +1,7 @@
 package com.raproject.whattowatch.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,7 +12,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.raproject.whattowatch.models.ContentDetailsStatus
+import com.raproject.whattowatch.models.ContentViewModel
 import com.raproject.whattowatch.ui.theme.LikeColor
 import com.raproject.whattowatch.ui.theme.TextColor
 import com.raproject.whattowatch.utils.PosterShape
@@ -27,12 +28,15 @@ import com.raproject.whattowatch.utils.PosterShape
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ContentInformationScreen(
-    model: ContentDetailsStatus.ContentInformationModel,
+    model: ContentViewModel,
     isInFavoriteState: Boolean,
-    onBackClickAction:()-> Unit = {},
-    manageLikeStatusAction: ((Throwable) -> Unit) -> Unit = {}) {
+    onBackClickAction: () -> Unit = {},
+    manageLikeStatusAction: ((Throwable) -> Unit) -> Unit = {}
+) {
     Column {
         val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
+
+        val likeButtonVisibilityState = MutableTransitionState(model.id != null)
 
         BackdropScaffold(
             appBar = {},
@@ -46,9 +50,13 @@ fun ContentInformationScreen(
 
                     GoBackIcon(goBackAction = onBackClickAction)
 
-                    PosterImage(url = model.posterUrl)
+                    PosterImage(url = model.posterURL)
 
-                    LikeIconButton(onClickAction = manageLikeStatusAction, isInFavorite =isInFavoriteState)
+                    LikeIconButtonWithVisibilityState(
+                        onClickAction = manageLikeStatusAction,
+                        isInFavorite = isInFavoriteState,
+                        visibilityState = likeButtonVisibilityState
+                    )
                 }
             },
             frontLayerContent = { ContentInfoList(model = model) },
@@ -62,14 +70,15 @@ fun ContentInformationScreen(
 }
 
 @Composable
-private fun BoxScope.GoBackIcon(goBackAction:()->Unit){
+private fun BoxScope.GoBackIcon(goBackAction: () -> Unit) {
     IconButton(
         onClick = { goBackAction.invoke() }, modifier = Modifier
             .padding(top = 16.dp, start = 0.dp)
-            .align(Alignment.TopStart)){
+            .align(Alignment.TopStart)
+    ) {
 
         Icon(
-            imageVector =  Icons.Default.ArrowBack,
+            imageVector = Icons.Default.ArrowBack,
             contentDescription = "Like Status",
             modifier = Modifier
                 .height(24.dp)
@@ -81,15 +90,29 @@ private fun BoxScope.GoBackIcon(goBackAction:()->Unit){
 }
 
 @Composable
-private fun BoxScope.LikeIconButton(onClickAction: ((Throwable) -> Unit) -> Unit, isInFavorite: Boolean){
+private fun BoxScope.LikeIconButtonWithVisibilityState(
+    onClickAction: ((Throwable) -> Unit) -> Unit,
+    isInFavorite: Boolean,
+    visibilityState: MutableTransitionState<Boolean>
+) {
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        modifier = Modifier.align(Alignment.BottomCenter)
+    ) {
+        LikeIconButton(onClickAction = onClickAction, isInFavorite = isInFavorite)
+    }
+}
 
+@Composable
+private fun LikeIconButton(
+    onClickAction: ((Throwable) -> Unit) -> Unit,
+    isInFavorite: Boolean
+) {
     IconButton(
         onClick = {
             println("FFF")
-            onClickAction.invoke({error -> })
-                  }, modifier = Modifier
-            .align(Alignment.BottomCenter)
-    ) {
+            onClickAction.invoke({ error -> })
+        }) {
         Icon(
             imageVector = if (isInFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
             contentDescription = "Like Status",
@@ -126,25 +149,19 @@ fun BoxScope.PosterImage(url: String) {
 }
 
 @Composable
-fun ContentInfoList(model:ContentDetailsStatus.ContentInformationModel) {
-    val contentList = listOf(
-        ContentInfoView.Title(title = model.title),
-        ContentInfoView.Space(spaceInDP = 4),
-        ContentInfoView.YearPlusDuration(year = model.year, duration = model.duration),
-        ContentInfoView.Space(spaceInDP = 8),
-        ContentInfoView.Genres(genres = model.genres),
-    )
-    LazyColumn {
-        items(contentList) { it.build() }
+fun ContentInfoList(model: ContentViewModel) {
+    LazyColumn(contentPadding = PaddingValues(top = 8.dp)) {
+        items(model.contentItems) { it.build() }
     }
 }
 
-private sealed class ContentInfoView {
+
+sealed class ContentInfoView {
 
     @Composable
     abstract fun build()
 
-    class Title(private val title: String) : ContentInfoView() {
+    data class Title(private val title: String) : ContentInfoView() {
 
         @Composable
         override fun build() {
@@ -159,7 +176,7 @@ private sealed class ContentInfoView {
         }
     }
 
-    class Genres(private val genres: String) : ContentInfoView() {
+    data class Genres(private val genres: String) : ContentInfoView() {
 
         @Composable
         override fun build() {
@@ -174,13 +191,12 @@ private sealed class ContentInfoView {
         }
     }
 
-    class YearPlusDuration(private val year: String, private val duration: String) :
-        ContentInfoView() {
+    data class YearPlusDuration(private val text: String) : ContentInfoView() {
 
         @Composable
         override fun build() {
             Text(
-                text = "$year, $duration",
+                text = text,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -190,7 +206,7 @@ private sealed class ContentInfoView {
         }
     }
 
-    class Space(private val spaceInDP: Int) : ContentInfoView() {
+    data class Space(private val spaceInDP: Int) : ContentInfoView() {
 
         @Composable
         override fun build() {

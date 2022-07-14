@@ -1,0 +1,6 @@
+package com.raproject.whattowatch.models
+
+enum class DataContentType {
+    POSTER, TITLE, GENRES, YEARANDDURATION, YEAR, COUNTRY, DURATION, SPACE, CAST,
+    DEVRATING, KINOPOISKRATING, DIRECTOR, DESCRIPTION;
+}

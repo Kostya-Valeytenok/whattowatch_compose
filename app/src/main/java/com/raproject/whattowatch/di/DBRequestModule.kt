@@ -11,5 +11,6 @@ val dbRequestsModule = module {
     factory { (params: Bundle) -> GetContentCardsByType(params =params) }
     factory { (id:String) -> PostContentIntoFavorite(contentId = id) }
     factory { (id:String) -> DeleteContentFromFavorite(contentId = id) }
-    factory { (params:Bundle)-> GetIsInFavoriteStatus(params = params) }
+    factory { (params: Bundle) -> GetIsInFavoriteStatus(params = params) }
+    factory { (params: Bundle) -> GetContentInfoById(params = params) }
 }
