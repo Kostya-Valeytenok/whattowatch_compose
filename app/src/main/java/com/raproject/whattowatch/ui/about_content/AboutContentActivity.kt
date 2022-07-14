@@ -67,8 +67,7 @@ class AboutContentActivity : ComponentActivity() {
                             title = "Inception",
                             year = "2010",
                             genres = "Action, Detective, Drama, Thriller, Fantastic",
-                            duration = "108 min",
-                            isInFavorite = true),
+                            duration = "108 min"),
                         onBackClickAction = goBackAction,
                         manageLikeStatusAction = manageFavoriteStatus,
                         isInFavoriteState = isInFavoriteState
@@ -94,8 +93,7 @@ fun DefaultPreview2() {
             title = "Inception",
             year = "2010",
             genres = "Action, Detective, Drama, Thriller, Fantastic",
-            duration = "108 min",
-            isInFavorite = true
+            duration = "108 min"
         ),
         isInFavoriteState = false
     )

@@ -10,5 +10,6 @@ val useCasesModel = module {
     single { GetTVShowsUseCase(get()) }
     single { GetAmineUseCase(get()) }
     single { AddContentToFavoriteUseCase(get()) }
+    single { DeleteContentFromFavoriteUseCase(get()) }
     single { GetIsInFavoriteStatusUseCase(get()) }
 }

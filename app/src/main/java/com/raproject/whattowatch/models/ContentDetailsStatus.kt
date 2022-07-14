@@ -12,8 +12,7 @@ sealed class ContentDetailsStatus{
         val title:String,
         var genres: String,
         val year: String,
-        val duration:String,
-        val isInFavorite:Boolean
+        val duration:String
     ) : ContentDetailsStatus()
 
     data class OnFailed(val throwable: Throwable) : ContentDetailsStatus()

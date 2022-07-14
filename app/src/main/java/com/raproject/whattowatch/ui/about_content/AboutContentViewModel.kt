@@ -3,6 +3,7 @@ package com.raproject.whattowatch.ui.about_content
 import androidx.lifecycle.viewModelScope
 import com.raproject.whattowatch.models.ContentDetailsStatus
 import com.raproject.whattowatch.repository.use_case.AddContentToFavoriteUseCase
+import com.raproject.whattowatch.repository.use_case.DeleteContentFromFavoriteUseCase
 import com.raproject.whattowatch.repository.use_case.GetIsInFavoriteStatusUseCase
 import com.raproject.whattowatch.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import org.koin.core.component.inject
 class AboutContentViewModel() : BaseViewModel() {
 
     private val addToFavoriteUseCase: AddContentToFavoriteUseCase by inject()
+    private val deleteFromFavoriteUseCase: DeleteContentFromFavoriteUseCase by inject()
     private val getIsInFavoriteStatusUseCase: GetIsInFavoriteStatusUseCase by inject()
     private var isInit = false
 
@@ -56,17 +58,14 @@ class AboutContentViewModel() : BaseViewModel() {
 
     private suspend fun addToFavorite(contentId: String, onError: (Throwable) -> Unit) {
         addToFavoriteUseCase.invoke(value = contentId)
-            .onSuccess {
-                println("added")
-                isInFavoriteMutableStateFlow.emit(true)
-            }
-            .onFailure{
-                println(it)
-            }
+            .onSuccess { isInFavoriteMutableStateFlow.emit(true) }
+            .onFailure(onError)
     }
 
     private suspend fun removeFromFavorite(contentId: String, onError: (Throwable) -> Unit) {
-        contentMutableState.value.modelOrNull()?.let { }
+        deleteFromFavoriteUseCase.invoke(value = contentId)
+            .onSuccess {  isInFavoriteMutableStateFlow.emit(false) }
+            .onFailure(onError)
     }
 
 

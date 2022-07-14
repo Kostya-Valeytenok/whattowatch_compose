@@ -6,6 +6,10 @@ class ContentDetailsRepository(private val requestManager: RequestManager) : Rep
         requestManager.postToFavorite(contentId)
     }
 
+    suspend fun deleteContentFromFavorite(contentId:String) = runRequest{
+        requestManager.deleteFromFavorite(contentId)
+    }
+
     suspend fun getIsInFavoriteStatus(contentId: String) = runRequest {
         requestManager.getIsInFavoriteStatus(contentId)
     }
