@@ -4,6 +4,7 @@ import com.raproject.whattowatch.models.ContentDetailsStatus
 import com.raproject.whattowatch.models.ContentViewModel
 import com.raproject.whattowatch.models.DataContentType
 import com.raproject.whattowatch.ui.ContentInfoView
+import kotlinx.coroutines.Deferred
 
 inline fun <T> Collection<T>.forEachIndexedWithLastMarker(
     action: (index: Int, T, isLast: Boolean) -> Unit
@@ -12,7 +13,6 @@ inline fun <T> Collection<T>.forEachIndexedWithLastMarker(
         action.invoke(index, t, (size - 1 == index))
     }
 }
-
 
 fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel {
 
@@ -26,11 +26,11 @@ fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel 
     val contentInfoViewList = mutableListOf<ContentInfoView>()
     val yearAndDurationText = yearAndDuration.joinToString()
 
-    var posterURL = ""
+    var posterURL: Deferred<*>? = null
 
     contentItems.forEach { (type, data) ->
         when (type) {
-            DataContentType.POSTER -> posterURL = data.toString()
+            DataContentType.POSTER -> posterURL = data as? Deferred<*>
             DataContentType.TITLE -> contentInfoViewList.add(ContentInfoView.Title(title = data.toString()))
             DataContentType.GENRES -> contentInfoViewList.add(
                 ContentInfoView.Genres(
@@ -50,7 +50,7 @@ fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel 
             )
             DataContentType.CAST -> {}
             DataContentType.DEVRATING -> {}
-            DataContentType.DEVRATING -> {}
+            DataContentType.KINOPOISKRATING -> {}
             DataContentType.DIRECTOR -> {}
             DataContentType.DESCRIPTION -> {}
 
@@ -58,5 +58,5 @@ fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel 
         }
     }
 
-    return ContentViewModel(id = id, posterURL = posterURL, contentItems = contentInfoViewList)
+    return ContentViewModel(id = id, posterURITask = posterURL, contentItems = contentInfoViewList)
 }

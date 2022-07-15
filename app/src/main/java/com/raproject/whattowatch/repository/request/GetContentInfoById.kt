@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import com.raproject.whattowatch.models.ContentDetailsStatus
 import com.raproject.whattowatch.models.DataContentType
+import com.raproject.whattowatch.repository.RemoteRepository
 import com.raproject.whattowatch.repository.run
 import com.raproject.whattowatch.utils.Localization
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,10 @@ class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetails
                     ContentDetailsStatus.onLoaded(
                         id = contentId,
                         contentItems = buildMap {
-                            put(DataContentType.POSTER, getString(1))
+                            put(
+                                DataContentType.POSTER,
+                                RemoteRepository.getPosterURLById(getString(1))
+                            )
                             put(DataContentType.TITLE, getString(2))
                             put(DataContentType.SPACE, 4)
                             put(DataContentType.YEARANDDURATION, "")

@@ -67,17 +67,19 @@ class AboutContentViewModel() : BaseViewModel() {
     private suspend fun getContentDetails(contentId: String, localization: Localization) =
         withContext(Dispatchers.Default) {
             contentLoadingMutableState.emit(ContentDetailsStatus.onLoading)
-            contentLoadingMutableState.emit(
-                getContentDetailsUseCase.invoke(
-                    GetContentDetailsModel(
-                        contentId,
-                        localization
-                    )
-                ).await()
-            )
-            val currentContentState = contentLoadingState.value
+            val result = getContentDetailsUseCase.invoke(
+                GetContentDetailsModel(
+                    contentId,
+                    localization
+                )
+            ).await()
+            contentLoadingMutableState.emit(result)
+            val currentContentState = result
             if (currentContentState is ContentDetailsStatus.onLoaded) {
                 contentMutableState.emit(currentContentState.convertToContentViewModel())
+            } else {
+                val errorState = currentContentState as ContentDetailsStatus.OnFailed
+                println(errorState.throwable)
             }
 
         }

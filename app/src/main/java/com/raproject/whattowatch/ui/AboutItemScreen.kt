@@ -5,13 +5,14 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,11 +20,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import com.raproject.whattowatch.models.ContentViewModel
 import com.raproject.whattowatch.ui.theme.LikeColor
 import com.raproject.whattowatch.ui.theme.TextColor
+import com.raproject.whattowatch.utils.EMPTY_URI
 import com.raproject.whattowatch.utils.PosterShape
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,7 +42,22 @@ fun ContentInformationScreen(
     Column {
         val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
 
-        val likeButtonVisibilityState = MutableTransitionState(model.id != null)
+        val spreadOfPosterState = remember { mutableStateOf(false) }
+        val likeButtonVisibilityState =
+            MutableTransitionState(model.id != null && spreadOfPosterState.value.not())
+        val posterURIState = remember { mutableStateOf<Any>(EMPTY_URI.toUri()) }
+        val posterLoadedState = remember { mutableStateOf(true) }
+
+
+        LaunchedEffect(key1 = model.posterURITask, block = {
+            withContext(Dispatchers.Default) {
+                posterLoadedState.value = true
+                val result = model.posterURITask?.await()
+                result?.let {
+                    posterURIState.value = it
+                } ?: kotlin.run { posterLoadedState.value = false }
+            }
+        })
 
         BackdropScaffold(
             appBar = {},
@@ -44,13 +65,16 @@ fun ContentInformationScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 4.dp, end = 4.dp)
                         .fillMaxHeight(fraction = 0.80f)
                 ) {
 
                     GoBackIcon(goBackAction = onBackClickAction)
 
-                    PosterImage(url = model.posterURL)
+                    PosterImage(
+                        uri = posterURIState.value,
+                        loadingProgressState = posterLoadedState,
+                        spreadOfPosterState = spreadOfPosterState
+                    )
 
                     LikeIconButtonWithVisibilityState(
                         onClickAction = manageLikeStatusAction,
@@ -73,7 +97,7 @@ fun ContentInformationScreen(
 private fun BoxScope.GoBackIcon(goBackAction: () -> Unit) {
     IconButton(
         onClick = { goBackAction.invoke() }, modifier = Modifier
-            .padding(top = 16.dp, start = 0.dp)
+            .padding(top = 20.dp, start = 0.dp)
             .align(Alignment.TopStart)
     ) {
 
@@ -125,26 +149,70 @@ private fun LikeIconButton(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BoxScope.PosterImage(url: String) {
+fun BoxScope.PosterImage(
+    uri: Any,
+    loadingProgressState: MutableState<Boolean>,
+    spreadOfPosterState: MutableState<Boolean>
+) {
+    val posterShape = PosterShape(
+        cornerRadius = with(LocalDensity.current) { 44.dp.toPx() },
+        cutPadding = with(LocalDensity.current) { 16.dp.toPx() },
+        existButtonPadding = with(LocalDensity.current) { 96.dp.toPx() })
+
+    val rounderState = RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp)
+
+    val loadingProgressBarVisibilityState = MutableTransitionState(loadingProgressState.value)
+
     Card(
         elevation = 4.dp,
         modifier = Modifier
             .align(Alignment.Center)
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(top = 8.dp, bottom = 16.dp),
-        shape = PosterShape(
-            cornerRadius = with(LocalDensity.current) { 44.dp.toPx() },
-            cutPadding = with(LocalDensity.current) { 16.dp.toPx() },
-            existButtonPadding = with(LocalDensity.current) { 96.dp.toPx() })
+            .padding(
+                top = if (spreadOfPosterState.value.not()) 8.dp else 0.dp,
+                bottom = if (spreadOfPosterState.value.not()) 16.dp else 0.dp,
+                start = if (spreadOfPosterState.value.not()) 4.dp else 0.dp,
+                end = if (spreadOfPosterState.value.not()) 4.dp else 0.dp
+            ),
+        shape = if (spreadOfPosterState.value.not()) posterShape else rounderState,
+        onClick = {
+            spreadOfPosterState.value = spreadOfPosterState.value.not()
+        }
     ) {
+
         AsyncImage(
-            modifier = Modifier
-                .fillMaxHeight(),
-            model = url,
+            modifier = Modifier.fillMaxHeight(),
+            model = uri,
             contentDescription = "Poster",
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillHeight,
+            onState = {
+                loadingProgressState.manageByImageLoadingState(
+                    uri = uri,
+                    loadingState = it
+                )
+            }
         )
+    }
+
+    BoxProgressBar(visibilityState = loadingProgressBarVisibilityState)
+}
+
+
+private fun MutableState<Boolean>.manageByImageLoadingState(
+    uri: Any,
+    loadingState: AsyncImagePainter.State
+) {
+    when (loadingState) {
+        is AsyncImagePainter.State.Empty -> {
+            value = false
+        }
+        is AsyncImagePainter.State.Loading -> value = true
+        is AsyncImagePainter.State.Success -> value = false
+        is AsyncImagePainter.State.Error -> {
+            value = uri.toString() == EMPTY_URI
+        }
     }
 }
 
