@@ -12,14 +12,32 @@ import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
 import com.raproject.whattowatch.ui.about_content.AboutContentActivity
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
+import com.raproject.whattowatch.utils.DoubleClickChecker
+import com.raproject.whattowatch.utils.Localization
+import com.raproject.whattowatch.utils.Settings
 
 class AppActivity : ComponentActivity() {
 
     private val vm: AppActivityViewModel by viewModels()
 
-    private val openAboutContentScreenAction: (String) ->Unit ={
+    private val openAboutContentScreenAction: (String) -> Unit = {
         println("Invoke")
         startActivity(AboutContentActivity.getLaunchIntent(this, contentId = it))
+    }
+
+    private val isNotDoubleClick: Boolean
+        get() = doubleClickVerification.isDoubleClicked.not()
+
+    private val doubleClickVerification = DoubleClickChecker()
+
+    private val setLocalizationAction: suspend () -> Unit = {
+
+        if (isNotDoubleClick) {
+            vm.setLocalization(
+                if (Settings.localization.value == Localization.English) Localization.Russian
+                else Localization.English
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +52,14 @@ class AppActivity : ComponentActivity() {
                 val content = vm.content.collectAsState().value
                 val loadingVisibility = vm.loadingStatus.collectAsState().value
                 val type = vm.screenTypeState.collectAsState().value
-                ContentScreen(content, loadingVisibility, type, navigationAction, openAboutContentScreenAction)
+                ContentScreen(
+                    content,
+                    loadingVisibility,
+                    type,
+                    navigationAction,
+                    openAboutContentScreenAction,
+                    setLocalizationAction
+                )
             }
         }
     }

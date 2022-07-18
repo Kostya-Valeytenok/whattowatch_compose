@@ -1,3 +1,5 @@
 package com.raproject.whattowatch.utils
 
-class TableRow(val name: String)
+import java.io.Serializable
+
+class TableRow(val name: String) : Serializable

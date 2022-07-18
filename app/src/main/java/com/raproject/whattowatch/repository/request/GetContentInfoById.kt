@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import java.util.concurrent.atomic.AtomicLong
 
 class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetailsStatus>(),
     KoinComponent {
@@ -26,6 +27,8 @@ class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetails
             putSerializable(LOCALIZATION_KEY, localization)
         }
     }
+
+    private var lastNoGroupId = AtomicLong(Long.MIN_VALUE)
 
     private val contentId: String = params.getString(CONTENT_ID, "")
 
@@ -49,9 +52,15 @@ class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetails
                                 RemoteRepository.getPosterURLById(getString(1))
                             )
                             put(DataContentType.TITLE, getString(2))
-                            put(DataContentType.SPACE, 4)
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                12
+                            )
                             put(DataContentType.YEARANDDURATION, "")
-                            put(DataContentType.SPACE, 8)
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                6
+                            )
                             put(DataContentType.YEAR, getString(3))
                             put(DataContentType.DURATION, getString(5))
                             getGenresTask.await().getOrNull()
@@ -59,8 +68,20 @@ class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetails
                             put(DataContentType.COUNTRY, getString(4))
                             put(DataContentType.DEVRATING, getString(6))
                             put(DataContentType.KINOPOISKRATING, getString(7))
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                8
+                            )
                             put(DataContentType.DIRECTOR, getString(8))
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                8
+                            )
                             put(DataContentType.CAST, getString(9))
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                16
+                            )
                             put(DataContentType.DESCRIPTION, getString(10))
                         }
                     )

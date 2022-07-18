@@ -20,8 +20,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import com.raproject.whattowatch.ui.theme.TextColor
-import com.raproject.whattowatch.utils.Localization
-import com.raproject.whattowatch.utils.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +29,8 @@ import kotlinx.coroutines.launch
 fun MainScreenToolbar(
     screenType: DrawerScreen,
     scaffoldState: BackdropScaffoldState,
-    visibility: Boolean
+    visibility: Boolean,
+    setLocalizationAction: suspend () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     TopAppBar(
@@ -44,7 +43,7 @@ fun MainScreenToolbar(
         },
         actions = {
             UploadingIndicator(visibility = visibility)
-            SettingsIcon(scope = scope)
+            SettingsIcon(scope = scope, setLocalizationAction)
         },
         elevation = 0.dp,
         backgroundColor = Color.Transparent
@@ -131,16 +130,14 @@ private fun UploadingIndicator(visibility: Boolean) {
 }
 
 @Composable
-private fun SettingsIcon(scope: CoroutineScope) {
+private fun SettingsIcon(scope: CoroutineScope, setLocalizationAction: suspend () -> Unit) {
     IconButton(
         onClick = {
             scope.launch {
-                if (Settings.localization.value == Localization.English)
-                    Settings.setLocale(Localization.Russian)
-                else Settings.setLocale(Localization.English)
+                setLocalizationAction.invoke()
             }
         },
     ) {
-        Icon(Icons.Default.Settings, contentDescription = "Settings",  tint = TextColor.value)
+        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = TextColor.value)
     }
 }

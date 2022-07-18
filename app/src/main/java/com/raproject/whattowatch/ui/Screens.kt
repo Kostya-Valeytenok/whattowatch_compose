@@ -1,10 +1,13 @@
 package com.raproject.whattowatch.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.BackdropScaffold
+import androidx.compose.material.BackdropValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import com.raproject.whattowatch.models.ContentItem
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -14,10 +17,11 @@ fun ContentScreen(
     loadingVisibility: Boolean,
     type: DrawerScreen,
     navigationAction: suspend (DrawerScreen) -> Unit,
-    openAboutContentScreenAction: (String) -> Unit
+    openAboutContentScreenAction: (String) -> Unit,
+    setLocalizationAction: suspend () -> Unit
 ) {
 
-    ScreenBase(type, loadingVisibility, navigationAction) {
+    ScreenBase(type, loadingVisibility, navigationAction, setLocalizationAction) {
         ContentView(series = titlesList, loadingVisibility, openAboutContentScreenAction)
     }
 }
@@ -29,6 +33,7 @@ private fun ScreenBase(
     type: DrawerScreen,
     loadingVisibility: Boolean,
     navigationAction: suspend (DrawerScreen) -> Unit,
+    setLocalizationAction: suspend () -> Unit,
     screen: @Composable () -> Unit
 ) {
     val scaffoldState = rememberBackdropScaffoldState(BackdropValue.Concealed)
@@ -39,7 +44,8 @@ private fun ScreenBase(
             MainScreenToolbar(
                 screenType = type,
                 scaffoldState = scaffoldState,
-                visibility = loadingVisibility
+                visibility = loadingVisibility,
+                setLocalizationAction = setLocalizationAction
             )
         },
         backLayerContent = {

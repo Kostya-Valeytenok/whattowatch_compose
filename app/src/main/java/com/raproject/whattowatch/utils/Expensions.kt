@@ -29,30 +29,43 @@ fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel 
     var posterURL: Deferred<*>? = null
 
     contentItems.forEach { (type, data) ->
+        println(type)
         when (type) {
-            DataContentType.POSTER -> posterURL = data as? Deferred<*>
-            DataContentType.TITLE -> contentInfoViewList.add(ContentInfoView.Title(title = data.toString()))
-            DataContentType.GENRES -> contentInfoViewList.add(
+            is DataContentType.POSTER -> posterURL = data as? Deferred<*>
+            is DataContentType.TITLE -> contentInfoViewList.add(ContentInfoView.Title(title = data.toString()))
+            is DataContentType.GENRES -> contentInfoViewList.add(
                 ContentInfoView.Genres(
                     genres = (data as? List<*>)?.joinToString()
                         ?: data.toString()
                 )
             )
-            DataContentType.SPACE -> contentInfoViewList.add(
+            is DataContentType.SPACE -> contentInfoViewList.add(
                 ContentInfoView.Space(
                     spaceInDP = data.toString().toInt()
                 )
             )
-            DataContentType.YEARANDDURATION -> contentInfoViewList.add(
+            is DataContentType.YEARANDDURATION -> contentInfoViewList.add(
                 ContentInfoView.YearPlusDuration(
                     text = if (yearAndDurationText.isNotBlank()) yearAndDurationText else data.toString()
                 )
             )
-            DataContentType.CAST -> {}
-            DataContentType.DEVRATING -> {}
-            DataContentType.KINOPOISKRATING -> {}
-            DataContentType.DIRECTOR -> {}
-            DataContentType.DESCRIPTION -> {}
+            is DataContentType.CAST -> contentInfoViewList.add(
+                ContentInfoView.Cast(
+                    castText = (data as? List<*>)?.joinToString() ?: data.toString()
+                )
+            )
+            is DataContentType.DEVRATING -> {}
+            is DataContentType.KINOPOISKRATING -> {}
+            is DataContentType.DIRECTOR -> contentInfoViewList.add(
+                ContentInfoView.Director(
+                    director = (data as? List<*>)?.joinToString() ?: data.toString()
+                )
+            )
+            is DataContentType.DESCRIPTION -> contentInfoViewList.add(
+                ContentInfoView.Description(
+                    data.toString()
+                )
+            )
 
             else -> {}
         }

@@ -17,7 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -133,10 +138,7 @@ private fun LikeIconButton(
     isInFavorite: Boolean
 ) {
     IconButton(
-        onClick = {
-            println("FFF")
-            onClickAction.invoke({ error -> })
-        }) {
+        onClick = { onClickAction.invoke({ error -> }) }) {
         Icon(
             imageVector = if (isInFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
             contentDescription = "Like Status",
@@ -226,53 +228,45 @@ fun ContentInfoList(model: ContentViewModel) {
 
 sealed class ContentInfoView {
 
+    open class CenterText(
+        private val text: String,
+        val fontSize: TextUnit,
+        fontWeight: FontWeight = FontWeight.Normal
+    ) : Text(text, fontSize, TextAlign.Center, fontWeight)
+
+    open class Text(
+        private val text: String,
+        private val fontSize: TextUnit,
+        private val textAlign: TextAlign = TextAlign.Start,
+        private val fontWeight: FontWeight = FontWeight.Normal
+    ) : ContentInfoView() {
+
+        @Composable
+        final override fun build() {
+            Text(
+                text = transformText(text = text),
+                fontSize = fontSize,
+                fontWeight = fontWeight,
+                textAlign = textAlign,
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+                    .fillMaxWidth()
+            )
+        }
+
+    }
+
     @Composable
     abstract fun build()
 
-    data class Title(private val title: String) : ContentInfoView() {
+    protected open fun transformText(text: String): AnnotatedString = AnnotatedString(text)
 
-        @Composable
-        override fun build() {
-            Text(
-                text = title,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-    }
+    data class Title(private val title: String) :
+        CenterText(text = title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
 
-    data class Genres(private val genres: String) : ContentInfoView() {
-
-        @Composable
-        override fun build() {
-            Text(
-                text = genres,
-                fontSize = 15.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-    }
-
-    data class YearPlusDuration(private val text: String) : ContentInfoView() {
-
-        @Composable
-        override fun build() {
-            Text(
-                text = text,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-    }
+    data class Genres(private val genres: String) : CenterText(text = genres, fontSize = 15.sp)
+    data class YearPlusDuration(private val text: String) :
+        CenterText(text = text, fontSize = 14.sp)
 
     data class Space(private val spaceInDP: Int) : ContentInfoView() {
 
@@ -283,11 +277,10 @@ sealed class ContentInfoView {
 
     }
 
-    class Cast : ContentInfoView() {
+    data class Cast(val castText: String) : Text(text = castText, fontSize = 15.sp) {
 
-        @Composable
-        override fun build() {
-            // TODO: "Not yet implemented"
+        override fun transformText(text: String): AnnotatedString {
+            return textWithBoldPrefix(textPrefix = "Cast: ", text = castText)
         }
     }
 
@@ -299,19 +292,29 @@ sealed class ContentInfoView {
         }
     }
 
-    class Director : ContentInfoView() {
+    data class Director(val director: String) : CenterText(text = director, fontSize = 15.sp) {
+        override fun transformText(text: String): AnnotatedString {
+            return textWithBoldPrefix(textPrefix = "Director: ", text = director)
+        }
 
-        @Composable
-        override fun build() {
-            // TODO: "Not yet implemented"
+    }
+
+    protected fun textWithBoldPrefix(textPrefix: String, text: String): AnnotatedString {
+        return buildAnnotatedString {
+            append("$textPrefix$text")
+
+            addStyle(
+                style = SpanStyle(fontWeight = FontWeight.Bold),
+                start = 0,
+                end = textPrefix.lastIndex
+            )
+            // Add bold style to keywords that has to be bold
         }
     }
 
-    class Description : ContentInfoView() {
-
-        @Composable
-        override fun build() {
-            // TODO: "Not yet implemented"
+    class Description(val description: String) : Text(text = description, fontSize = 16.sp) {
+        override fun transformText(text: String): AnnotatedString {
+            return textWithBoldPrefix(textPrefix = "Description: ", text = description)
         }
     }
 }
