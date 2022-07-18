@@ -7,7 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.raproject.whattowatch.R
 import com.raproject.whattowatch.ui.theme.TextColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -138,6 +140,10 @@ private fun SettingsIcon(scope: CoroutineScope, setLocalizationAction: suspend (
             }
         },
     ) {
-        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = TextColor.value)
+        Icon(
+            ImageVector.vectorResource(id = R.drawable.ic_translate),
+            contentDescription = "Settings",
+            tint = TextColor.value
+        )
     }
 }

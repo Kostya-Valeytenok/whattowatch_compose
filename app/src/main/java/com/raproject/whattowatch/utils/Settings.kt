@@ -11,7 +11,7 @@ import org.koin.core.component.inject
 object Settings : KoinComponent {
 
     val settingsErrorCallback: (Throwable) -> Unit = { error ->
-
+        println(error)
     }
 
     private val getLocalizationUseCase: GetLocalizationUseCase by inject()
@@ -43,9 +43,5 @@ object Settings : KoinComponent {
 
     suspend fun updateOrderRow() {
         orderedRowState.emit(getOrderRowUseCase.invoke())
-    }
-
-    suspend fun OrderType.update() {
-        orderTypeState.emit(this)
     }
 }
