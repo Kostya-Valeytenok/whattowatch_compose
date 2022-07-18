@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import com.raproject.whattowatch.repository.app_settings.AbstractPreferences.Serializer.To
-import com.raproject.whattowatch.utils.Settings
+import com.raproject.whattowatch.utils.AppState
 import com.raproject.whattowatch.utils.TableRow
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -149,7 +149,7 @@ abstract class AbstractPreferences(private val name: String, context: Context) {
             override fun serialize(from: java.time.Instant) = To.Long(from.toEpochMilli())
             override fun deserialize(value: Any) =
                 runCatching { java.time.Instant.ofEpochMilli(value as Long) }.onFailure {
-                    Settings.settingsErrorCallback.invoke(it)
+                    AppState.settingsErrorCallback.invoke(it)
                 }.getOrNull()
         }
 
@@ -162,7 +162,7 @@ abstract class AbstractPreferences(private val name: String, context: Context) {
             override fun deserialize(value: Any): com.raproject.whattowatch.utils.Localization? =
                 runCatching {
                     com.raproject.whattowatch.utils.Localization.valueOf(value as String)
-                }.onFailure { Settings.settingsErrorCallback.invoke(it) }.getOrNull()
+                }.onFailure { AppState.settingsErrorCallback.invoke(it) }.getOrNull()
         }
 
         object OrderType : Serializer<com.raproject.whattowatch.utils.OrderType, To.String> {
@@ -173,7 +173,7 @@ abstract class AbstractPreferences(private val name: String, context: Context) {
             override fun deserialize(value: Any): com.raproject.whattowatch.utils.OrderType? =
                 runCatching {
                     com.raproject.whattowatch.utils.OrderType.valueOf(value as String)
-                }.onFailure { Settings.settingsErrorCallback.invoke(it) }.getOrNull()
+                }.onFailure { AppState.settingsErrorCallback.invoke(it) }.getOrNull()
         }
 
         object OrderedRow : Serializer<TableRow, To.String> {
@@ -181,7 +181,7 @@ abstract class AbstractPreferences(private val name: String, context: Context) {
 
             override fun deserialize(value: Any): TableRow? {
                 return runCatching { TableRow(value as String) }.onFailure {
-                    Settings.settingsErrorCallback.invoke(
+                    AppState.settingsErrorCallback.invoke(
                         it
                     )
                 }.getOrNull()

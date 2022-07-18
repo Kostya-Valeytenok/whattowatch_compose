@@ -8,9 +8,9 @@ import com.raproject.whattowatch.repository.use_case.AddContentToFavoriteUseCase
 import com.raproject.whattowatch.repository.use_case.DeleteContentFromFavoriteUseCase
 import com.raproject.whattowatch.repository.use_case.GetContentDetailsUseCase
 import com.raproject.whattowatch.repository.use_case.GetIsInFavoriteStatusUseCase
+import com.raproject.whattowatch.utils.AppState
 import com.raproject.whattowatch.utils.BaseViewModel
 import com.raproject.whattowatch.utils.Localization
-import com.raproject.whattowatch.utils.Settings
 import com.raproject.whattowatch.utils.convertToContentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +61,7 @@ class AboutContentViewModel() : BaseViewModel() {
     }
 
     private suspend fun manageContentByLocalizationState(contentId: String = this.contentId) {
-        Settings.localization.collect { localization -> getContentDetails(contentId, localization) }
+        AppState.localization.collect { localization -> getContentDetails(contentId, localization) }
     }
 
     private suspend fun getContentDetails(contentId: String, localization: Localization) =

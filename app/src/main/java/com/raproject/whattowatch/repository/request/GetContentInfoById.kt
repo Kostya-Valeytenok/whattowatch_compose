@@ -83,6 +83,13 @@ class GetContentInfoById(private val params: Bundle) : GetRequest<ContentDetails
                                 16
                             )
                             put(DataContentType.DESCRIPTION, getString(10))
+
+                            put(
+                                DataContentType.SPACE(lastNoGroupId.incrementAndGet().toString()),
+                                16
+                            )
+
+                            put(DataContentType.RATINGVIEW, "")
                         }
                     )
                 }.getOrThrow()

@@ -3,6 +3,7 @@ package com.raproject.whattowatch.models
 sealed class DataContentType() {
 
     object POSTER : DataContentType()
+    object RATINGVIEW : DataContentType()
     object TITLE : DataContentType()
     object GENRES : DataContentType()
     object YEARANDDURATION : DataContentType()

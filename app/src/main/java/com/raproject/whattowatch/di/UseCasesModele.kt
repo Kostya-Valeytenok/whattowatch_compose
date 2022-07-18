@@ -17,4 +17,5 @@ val useCasesModel = module {
     single { GetLocalizationUseCase(get()) }
     single { GetOrderTypeUseCase(get()) }
     single { SetLocalizationUseCase(get()) }
+    single { GetFavoriteUseCase(get()) }
 }

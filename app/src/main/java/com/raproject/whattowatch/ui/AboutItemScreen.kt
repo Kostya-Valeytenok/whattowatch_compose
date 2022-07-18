@@ -317,5 +317,13 @@ sealed class ContentInfoView {
             return textWithBoldPrefix(textPrefix = "Description: ", text = description)
         }
     }
+
+    data class Rating(val kinopoiskRating: String?, val devRating: String?) : ContentInfoView() {
+
+        @Composable
+        override fun build() {
+            RatingView(kinopoiskRating = kinopoiskRating, devRating = devRating)
+        }
+    }
 }
 

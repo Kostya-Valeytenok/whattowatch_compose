@@ -17,10 +17,15 @@ inline fun <T> Collection<T>.forEachIndexedWithLastMarker(
 fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel {
 
     val contentItems = contentItems.toMutableMap()
+    var devRating: String?
+    var kinopoinskRating: String?
 
     val yearAndDuration = mutableListOf<String>().apply {
         contentItems.remove(DataContentType.YEAR)?.let { add(it.toString()) }
         contentItems.remove(DataContentType.DURATION)?.let { add(it.toString()) }
+        contentItems.remove(DataContentType.KINOPOISKRATING)
+            .let { kinopoinskRating = it.toString() }
+        contentItems.remove(DataContentType.DEVRATING).let { devRating = it.toString() }
     }
 
     val contentInfoViewList = mutableListOf<ContentInfoView>()
@@ -66,7 +71,23 @@ fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel 
                     data.toString()
                 )
             )
+            is DataContentType.RATINGVIEW -> {
 
+                if (devRating == null && kinopoinskRating == null) {
+
+                    if (data is List<*>) {
+                        kinopoinskRating = runCatching { data[0].toString() }.getOrNull()
+                        devRating = runCatching { data[1].toString() }.getOrNull()
+                    } else devRating = data.toString()
+                }
+
+                contentInfoViewList.add(
+                    ContentInfoView.Rating(
+                        kinopoiskRating = kinopoinskRating,
+                        devRating = devRating
+                    )
+                )
+            }
             else -> {}
         }
     }

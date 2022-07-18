@@ -12,9 +12,9 @@ import com.raproject.whattowatch.ui.ContentScreen
 import com.raproject.whattowatch.ui.DrawerScreen
 import com.raproject.whattowatch.ui.about_content.AboutContentActivity
 import com.raproject.whattowatch.ui.theme.WhattowatchTheme
+import com.raproject.whattowatch.utils.AppState
 import com.raproject.whattowatch.utils.DoubleClickChecker
 import com.raproject.whattowatch.utils.Localization
-import com.raproject.whattowatch.utils.Settings
 
 class AppActivity : ComponentActivity() {
 
@@ -34,7 +34,7 @@ class AppActivity : ComponentActivity() {
 
         if (isNotDoubleClick) {
             vm.setLocalization(
-                if (Settings.localization.value == Localization.English) Localization.Russian
+                if (AppState.localization.value == Localization.English) Localization.Russian
                 else Localization.English
             )
         }

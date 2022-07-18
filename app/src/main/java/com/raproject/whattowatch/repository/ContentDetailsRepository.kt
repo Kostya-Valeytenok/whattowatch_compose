@@ -1,8 +1,7 @@
 package com.raproject.whattowatch.repository
 
 import com.raproject.whattowatch.models.ContentDetailsStatus
-import com.raproject.whattowatch.utils.Localization
-import com.raproject.whattowatch.utils.RequestInitError
+import com.raproject.whattowatch.utils.*
 
 class ContentDetailsRepository(private val requestManager: RequestManager) : Repository() {
 
@@ -21,11 +20,17 @@ class ContentDetailsRepository(private val requestManager: RequestManager) : Rep
     }
 
     suspend fun addContentToFavorite(contentId: String) = runRequest {
-        requestManager.postToFavorite(contentId)
+        val result = requestManager.postToFavorite(contentId)
+        runCatching { AppState.bookmarkHasChange.emit(contentId + ADD_TO_FAVORITE) }
+            .onFailure { AppState.settingsErrorCallback.invoke(it) }
+        result
     }
 
     suspend fun deleteContentFromFavorite(contentId: String) = runRequest {
-        requestManager.deleteFromFavorite(contentId)
+        val result = requestManager.deleteFromFavorite(contentId)
+        runCatching { AppState.bookmarkHasChange.emit(contentId + REMOVE_FROM_FAVORITE) }
+            .onFailure { AppState.settingsErrorCallback.invoke(it) }
+        result
     }
 
     suspend fun getIsInFavoriteStatus(contentId: String) = runRequest {

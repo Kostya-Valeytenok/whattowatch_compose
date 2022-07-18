@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-object Settings : KoinComponent {
+object AppState : KoinComponent {
 
     val settingsErrorCallback: (Throwable) -> Unit = { error ->
         println(error)
     }
+
+    val bookmarkHasChange = MutableStateFlow<String>("0")
 
     private val getLocalizationUseCase: GetLocalizationUseCase by inject()
     private val getOrderRowUseCase: GetOrderRowUseCase by inject()
