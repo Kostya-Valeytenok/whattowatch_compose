@@ -22,9 +22,12 @@ class ShadowDatabase {
 
     val databaseHelper = FakeDBHelper(context) as SQLiteOpenHelper
 
-    private inner class FakeDBHelper(context:Context) : SQLiteOpenHelper(context,shadowDatabaseName,null, 1) {
+    private inner class FakeDBHelper(context: Context) :
+        SQLiteOpenHelper(context, shadowDatabaseName, null, 120) {
 
-        override fun onCreate(db: SQLiteDatabase) { db.build() }
+        override fun onCreate(db: SQLiteDatabase) {
+            db.build()
+        }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
             onCreate(db)
@@ -38,7 +41,6 @@ class ShadowDatabase {
 
     @Implementation
     suspend fun <T> execute(request: GetRequest<T>): Result<T> {
-        println("Make test request")
         return databaseHelper.use {request.run(scope = it.getWritableDB())  }
     }
 }

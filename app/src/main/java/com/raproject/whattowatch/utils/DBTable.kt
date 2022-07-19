@@ -19,7 +19,7 @@ sealed class DBTable {
             TVShows -> "Series"
             Posters -> "Posters"
             Cartoons -> "Cartoons"
-            Favorite -> "Wanttowatch"
+            Favorite -> "Favorite"
         }
     }
 

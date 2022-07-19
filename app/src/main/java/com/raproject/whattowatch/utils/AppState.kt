@@ -34,8 +34,6 @@ object AppState : KoinComponent {
         get() = orderedRowState
 
     suspend fun updateLocalization() {
-        val localization = getLocalizationUseCase.invoke()
-        println("UpdateLocalization to $localization")
         localizationState.emit(getLocalizationUseCase.invoke())
     }
 
