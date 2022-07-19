@@ -42,7 +42,6 @@ class AboutContentActivity : ComponentActivity() {
     private val goBackAction: () -> Unit = { if (isNotDoubleClick) finish() }
 
     private val manageFavoriteStatus: ((Throwable)->Unit) -> Unit = {
-        println("Click")
         viewModel.manageFavoriteStatus(onErrorAction = it)
     }
 

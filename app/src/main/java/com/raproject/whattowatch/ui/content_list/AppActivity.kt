@@ -21,7 +21,6 @@ class AppActivity : ComponentActivity() {
     private val vm: AppActivityViewModel by viewModels()
 
     private val openAboutContentScreenAction: (String) -> Unit = {
-        println("Invoke")
         startActivity(AboutContentActivity.getLaunchIntent(this, contentId = it))
     }
 

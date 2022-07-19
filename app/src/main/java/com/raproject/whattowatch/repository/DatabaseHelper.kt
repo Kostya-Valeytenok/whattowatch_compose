@@ -6,13 +6,14 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.raproject.whattowatch.models.OldUserData
+import com.raproject.whattowatch.repository.migration.DatabaseMigrationTo120Version
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 
 class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db") :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION), KoinComponent {
@@ -44,12 +45,12 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
     }
 
     private fun SQLiteDatabase.getOldUserData(): OldUserData {
-        val wantToWatchCursor = rawQuery("select * from Wanttowatch", null)
+        val favoritesCursor = rawQuery("select * from Favorite", null)
         val sawCursor = rawQuery("select * from Saw", null)
-        wantToWatchCursor.moveToFirst()
+        favoritesCursor.moveToFirst()
         sawCursor.moveToFirst()
         close()
-        val oldUserData: OldUserData by inject { parametersOf(wantToWatchCursor, sawCursor) }
+        val oldUserData: OldUserData by inject { parametersOf(favoritesCursor, sawCursor) }
         return oldUserData
     }
 
@@ -62,22 +63,22 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
 
     private fun SQLiteDatabase.tryToRestoreUserData(userData: OldUserData) = runCatching {
         uploadOldUserDataToDB(
-            wantToWatchData = userData.wantToWatchCursor,
+            favoritesData = userData.favoritesCursor,
             sawData = userData.sawCursor
         )
     }
 
-    private fun SQLiteDatabase.uploadOldUserDataToDB(wantToWatchData: Cursor, sawData: Cursor) {
+    private fun SQLiteDatabase.uploadOldUserDataToDB(favoritesData: Cursor, sawData: Cursor) {
 
-        wantToWatchData.use {
-            while (it.isAfterLast) {
-                execSQL("insert into Wanttowatch values (${it.getInt(0)})")
+        favoritesData.use {
+            while (!it.isAfterLast) {
+                execSQL("insert into Favorite values (${it.getInt(0)})")
                 it.moveToNext()
             }
         }
 
         sawData.use {
-            while (it.isAfterLast) {
+            while (!it.isAfterLast) {
                 execSQL("insert into Saw values (${it.getInt(0)})")
                 it.moveToNext()
             }
@@ -133,7 +134,13 @@ class DatabaseHelper(context: Context, private val DB_NAME: String = "content.db
 
     override fun onCreate(db: SQLiteDatabase) {}
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (newVersion > oldVersion) mNeedUpdate = true
+        if (newVersion > oldVersion) {
+            db.runMigration(migration = DatabaseMigrationTo120Version, oldVersion = oldVersion)
+                .onFailure {
+                    println(it)
+                }
+            mNeedUpdate = true
+        }
     }
 
     init {

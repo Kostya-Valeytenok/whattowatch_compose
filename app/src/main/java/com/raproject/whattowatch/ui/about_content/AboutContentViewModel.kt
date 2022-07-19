@@ -48,7 +48,6 @@ class AboutContentViewModel() : BaseViewModel() {
         this.contentId = contentId
         if (isInit.not()) {
             isInit = true
-            println("Init")
             viewModelScope.launch(Dispatchers.Default) { getIsInFavoriteStatus() }
             viewModelScope.launch(Dispatchers.Default) { manageContentByLocalizationState() }
         }
