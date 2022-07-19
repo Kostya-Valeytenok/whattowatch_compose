@@ -1,0 +1,110 @@
+{
+  "project_info": {
+    "project_number": "38182520478",
+    "firebase_url": "https://whattosee-76dbd.firebaseio.com",
+    "project_id": "whattosee-76dbd",
+    "storage_bucket": "whattosee-76dbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38182520478:android:14d369f479d4abed561d8f",
+        "android_client_info": {
+          "package_name": "com.RaProject.whattosee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38182520478-8rktpio661885i61pavumdupfou0c1go.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.RaProject.whattosee",
+            "certificate_hash": "2123281672a34f00d4180b6dcfe9eaa3629219e3"
+          }
+        },
+        {
+          "client_id": "38182520478-cvrmhjrsktpd6ppr7lt4g2rc88v47er9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.RaProject.whattosee",
+            "certificate_hash": "84becee15f42f7fa975323c87fb815cbff32a2f2"
+          }
+        },
+        {
+          "client_id": "38182520478-hisf466ds0tqrhcd316bf8ctcqi6u6me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.RaProject.whattosee",
+            "certificate_hash": "b79ad1dd8ef930b5d2cb40b518fa7ca808550c35"
+          }
+        },
+        {
+          "client_id": "38182520478-trnuvuo4n5ksi82ai0ngu3v2n5rj434v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.RaProject.whattosee",
+            "certificate_hash": "666749b2cbee5bc8de1be427471506d077d24194"
+          }
+        },
+        {
+          "client_id": "38182520478-lcm2aeeoag7pfi1ro8898r40hp2m1f8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Q23VzbwWFQQ4iwpKL4cVVNtAoKRhygQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38182520478-lcm2aeeoag7pfi1ro8898r40hp2m1f8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9595963256137742~1249614013"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38182520478:android:d57ab86944b652ee561d8f",
+        "android_client_info": {
+          "package_name": "com.raproject.whattowatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38182520478-qececlhkf62gc04ktu972bvhehuoi5hv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raproject.whattowatch",
+            "certificate_hash": "0fbceff6093991ae392f5f4dace3ed05196f4c5d"
+          }
+        },
+        {
+          "client_id": "38182520478-lcm2aeeoag7pfi1ro8898r40hp2m1f8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Q23VzbwWFQQ4iwpKL4cVVNtAoKRhygQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38182520478-lcm2aeeoag7pfi1ro8898r40hp2m1f8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

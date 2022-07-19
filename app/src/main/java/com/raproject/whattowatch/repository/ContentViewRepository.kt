@@ -29,6 +29,16 @@ class ContentViewRepository(private val requestManager: RequestManager) : Reposi
         )
     }
 
+    suspend fun getFavorieContentItems(
+        localization: Localization
+    ): Deferred<Result<List<ContentItem>>> = runRequest {
+        requestManager.getContentCardsByType(
+            contentType = ContentType.Favorite,
+            localization = localization,
+            orderCommand = ""
+        )
+    }
+
     suspend fun getMoviesContentItems(
         localization: Localization,
         orderCommand: String

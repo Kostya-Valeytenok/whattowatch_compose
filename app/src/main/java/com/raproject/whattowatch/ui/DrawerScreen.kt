@@ -9,12 +9,11 @@ sealed class DrawerScreen(val title: String, val iconId: Int) {
     object Cartoons : DrawerScreen("Cartoons", R.drawable.ic_cartoons)
     object Anime : DrawerScreen("Anime", R.drawable.ic_anime)
     object Top100 : DrawerScreen("Our Top 100", R.drawable.ic_top)
-    object WantToWatch : DrawerScreen("Want to watch", R.drawable.want_to_watch)
-    object Watched : DrawerScreen("Watched", R.drawable.ic_wathched)
+    object Favorite : DrawerScreen("Favorite", R.drawable.ic_favorite)
 
     companion object {
         val screens = listOf(
-            Movies, Serials, Cartoons, Anime, Top100, WantToWatch, Watched
+            Movies, Serials, Cartoons, Anime, Top100, Favorite
         )
     }
 }

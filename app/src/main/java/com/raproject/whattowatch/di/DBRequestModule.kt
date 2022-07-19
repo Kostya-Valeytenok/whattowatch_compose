@@ -1,10 +1,7 @@
 package com.raproject.whattowatch.di
 
 import android.os.Bundle
-import com.raproject.whattowatch.repository.request.GetContentCardsByType
-import com.raproject.whattowatch.repository.request.GetGenresById
-import com.raproject.whattowatch.repository.request.GetSmallPosterById
-import com.raproject.whattowatch.repository.request.GetTop100
+import com.raproject.whattowatch.repository.request.*
 import org.koin.dsl.module
 
 val dbRequestsModule = module {
@@ -12,4 +9,8 @@ val dbRequestsModule = module {
     factory { (params: Bundle) -> GetSmallPosterById(params =params) }
     factory { (params: Bundle) -> GetTop100(params =params) }
     factory { (params: Bundle) -> GetContentCardsByType(params =params) }
+    factory { (id:String) -> PostContentIntoFavorite(contentId = id) }
+    factory { (id:String) -> DeleteContentFromFavorite(contentId = id) }
+    factory { (params: Bundle) -> GetIsInFavoriteStatus(params = params) }
+    factory { (params: Bundle) -> GetContentInfoById(params = params) }
 }
