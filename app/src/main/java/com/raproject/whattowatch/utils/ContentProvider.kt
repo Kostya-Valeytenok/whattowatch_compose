@@ -44,9 +44,10 @@ class ContentProvider : KoinComponent {
             bookmarkHasChange
         ) { type, localization, orderType, orderedRow, id ->
 
-            if (type != DrawerScreen.Favorite && bookMarkIdCache != id) return@combine contentItemsCache
-
-            bookMarkIdCache = id
+            if (type != DrawerScreen.Favorite && bookMarkIdCache != id) {
+                bookMarkIdCache = id
+                return@combine contentItemsCache
+            }
 
             val getContentModel = GetContentModel(localization, orderType.by(orderedRow))
             when (type) {
