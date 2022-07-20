@@ -27,6 +27,11 @@ android {
             useSupportLibrary true
         }
     }
+    defaultConfig {
+        buildConfigField "String", "MOUNTHLY_SUBSCRIPTION", "\"monthly_subscription\""
+        buildConfigField "String", "THREE_MOUNTHS_SUBSCRIPTION", "\"three_months_subscription\""
+        buildConfigField "String", "ANNUALLY_SUBSCRIPTION", "\"anually_subscription\""
+    }
 
     buildTypes {
         release {
@@ -99,6 +104,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.8.1'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3'
+
+    implementation 'com.android.billingclient:billing-ktx:5.0.0'
 
     testImplementation "io.mockk:mockk:1.12.4"
 }

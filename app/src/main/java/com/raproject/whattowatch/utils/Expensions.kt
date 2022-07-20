@@ -1,5 +1,7 @@
 package com.raproject.whattowatch.utils
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.QueryProductDetailsParams
 import com.raproject.whattowatch.models.ContentDetailsStatus
 import com.raproject.whattowatch.models.ContentViewModel
 import com.raproject.whattowatch.models.DataContentType
@@ -12,6 +14,18 @@ inline fun <T> Collection<T>.forEachIndexedWithLastMarker(
     forEachIndexed { index, t ->
         action.invoke(index, t, (size - 1 == index))
     }
+}
+
+fun List<String>.createQueryProductDetailsParamsForSubscription() = buildList {
+    this@createQueryProductDetailsParamsForSubscription.forEach {
+        add(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(it)
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+        )
+    }
+
 }
 
 fun ContentDetailsStatus.onLoaded.convertToContentViewModel(): ContentViewModel {

@@ -5,6 +5,7 @@ import com.raproject.whattowatch.utils.AppState
 import com.raproject.whattowatch.utils.Localization
 import com.raproject.whattowatch.utils.OrderType
 import com.raproject.whattowatch.utils.TableRow
+import java.time.Instant
 
 class SettingRepository(private val settings: AppSettings) : Repository() {
 
@@ -15,5 +16,13 @@ class SettingRepository(private val settings: AppSettings) : Repository() {
     suspend fun setLocalization(localization: Localization) {
         settings.localization = localization
         AppState.updateLocalization()
+    }
+
+    fun getPurchaseTime(): Instant {
+        return settings.purchaseTime
+    }
+
+    suspend fun setPurchaseTime(purchaseTime: Instant) {
+        settings.purchaseTime = purchaseTime
     }
 }

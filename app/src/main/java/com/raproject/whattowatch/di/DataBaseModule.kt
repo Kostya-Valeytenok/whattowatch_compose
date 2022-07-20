@@ -6,6 +6,8 @@ import com.raproject.whattowatch.models.OldUserData
 import com.raproject.whattowatch.repository.*
 import com.raproject.whattowatch.repository.app_settings.AppSettings
 import com.raproject.whattowatch.repository.app_settings.SettingRepository
+import com.raproject.whattowatch.repository.billing.BillingCore
+import com.raproject.whattowatch.repository.billing.BillingManager
 import com.raproject.whattowatch.utils.ContentProvider
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +23,9 @@ var dataBaseCasesModule = module {
     single { ContentViewRepository(get()) }
     single { ContentDetailsRepository(get()) }
     single { SettingRepository(get()) }
+
+    single { BillingCore(androidContext()) }
+    single { BillingManager() }
 
     factory { params -> OldUserData(params[0], params[1]) }
     factory { ContentProvider() }
